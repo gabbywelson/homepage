@@ -307,16 +307,40 @@ const active = (href: string) =>
       padding: 48px 0;
     }
 
+    .footer-main,
+    .footer-note {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
     .footer-signature {
-      font-size: 0.6875rem;
+      flex-wrap: wrap;
+      gap: 4px 8px;
     }
 
     .social-links {
+      flex-wrap: wrap;
       gap: 0;
+      margin-left: -13px;
     }
 
     .social-links a {
-      width: 30px;
+      width: 44px;
+      height: 44px;
+    }
+
+    .footer-note {
+      gap: 0;
+      margin-top: 12px;
+      font-size: 0.75rem;
+    }
+
+    .footer-note a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 44px;
     }
   }
 
@@ -333,11 +357,6 @@ const active = (href: string) =>
       --icon-size: 23px;
       gap: 4px;
       font-size: 1rem;
-    }
-
-    .footer-main,
-    .footer-note {
-      flex-wrap: wrap;
     }
   }
 
