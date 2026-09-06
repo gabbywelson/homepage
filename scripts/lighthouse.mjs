@@ -6,6 +6,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { parseArgs } from 'node:util';
 import { launch } from 'chrome-launcher';
 import lighthouse from 'lighthouse';
+import desktopConfig from 'lighthouse/core/config/desktop-config.js';
 
 const { values, positionals } = parseArgs({
   options: { desktop: { type: 'boolean', default: false } },
@@ -15,11 +16,17 @@ const routes = positionals.length
   ? positionals
   : ['/', '/blog/', '/resume/', '/garden/', '/uses/', '/blog/coming-out/'];
 const origin = 'http://127.0.0.1:4324';
-if (routes.some((route) => {
-  const url = new URL(route, origin);
-  return !route.startsWith('/') || route.includes('\\') ||
-    url.origin !== origin || Boolean(url.search || url.hash);
-})) {
+if (
+  routes.some((route) => {
+    const url = new URL(route, origin);
+    return (
+      !route.startsWith('/') ||
+      route.includes('\\') ||
+      url.origin !== origin ||
+      Boolean(url.search || url.hash)
+    );
+  })
+) {
   throw new Error('Pass local route paths, such as / or /uses/.');
 }
 
@@ -81,13 +88,21 @@ try {
   chrome = await launch({ chromeFlags: ['--headless=new'] });
 
   for (const route of routes) {
-    const result = await lighthouse(new URL(route, origin).href, {
-      port: chrome.port,
-      logLevel: 'error',
-      output: ['json', 'html'],
-      onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
-      ...(values.desktop ? { preset: /** @type {const} */ ('desktop') } : {}),
-    });
+    const result = await lighthouse(
+      new URL(route, origin).href,
+      {
+        port: chrome.port,
+        logLevel: 'error',
+        output: ['json', 'html'],
+        onlyCategories: [
+          'performance',
+          'accessibility',
+          'best-practices',
+          'seo',
+        ],
+      },
+      values.desktop ? desktopConfig : undefined,
+    );
     if (!result || result.lhr.runtimeError) {
       throw new Error(
         result?.lhr.runtimeError?.message ??
@@ -95,8 +110,16 @@ try {
       );
     }
     const { lhr } = result;
+    if (lhr.configSettings.formFactor !== profile) {
+      throw new Error(
+        `Expected ${profile} settings, received ${lhr.configSettings.formFactor}.`,
+      );
+    }
     const pathname = new URL(route, origin).pathname;
-    const slug = encodeURIComponent(pathname.replace(/^\/+|\/+$/g, '').replaceAll('/', '-')) || 'home';
+    const slug =
+      encodeURIComponent(
+        pathname.replace(/^\/+|\/+$/g, '').replaceAll('/', '-'),
+      ) || 'home';
     const name = `${slug}-${profile}`;
     const reports = Array.isArray(result.report)
       ? result.report
@@ -158,7 +181,11 @@ try {
     );
 } finally {
   chrome?.kill();
-  if (!previewError && preview.exitCode === null && preview.signalCode === null) {
+  if (
+    !previewError &&
+    preview.exitCode === null &&
+    preview.signalCode === null
+  ) {
     const stopped = once(preview, 'exit');
     preview.kill('SIGTERM');
     const forceStop = setTimeout(() => preview.kill('SIGKILL'), 5000);
