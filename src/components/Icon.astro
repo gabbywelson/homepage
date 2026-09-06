@@ -14,10 +14,11 @@ import github from '@phosphor-icons/core/assets/regular/github-logo.svg?raw';
 import butterfly from '@phosphor-icons/core/assets/regular/butterfly.svg?raw';
 import mastodon from '@phosphor-icons/core/assets/regular/mastodon-logo.svg?raw';
 import linkedin from '@phosphor-icons/core/assets/regular/linkedin-logo.svg?raw';
+import twitter from '@phosphor-icons/core/assets/regular/twitter-logo.svg?raw';
 import rss from '@phosphor-icons/core/assets/regular/rss.svg?raw';
 import arrow from '@phosphor-icons/core/assets/regular/arrow-up-right.svg?raw';
 import right from '@phosphor-icons/core/assets/regular/arrow-right.svg?raw';
-const icons = { plant, flower, sun, moon, sparkle, coffee, code, notebook, desktop, handshake, graduation, github, butterfly, mastodon, linkedin, rss, arrow, right };
+const icons = { plant, flower, sun, moon, sparkle, coffee, code, notebook, desktop, handshake, graduation, github, butterfly, mastodon, linkedin, twitter, rss, arrow, right };
 export type IconName = keyof typeof icons;
 interface Props { name: IconName; class?: string; }
 const { name, class: className } = Astro.props;
