@@ -1,8 +1,8 @@
 import { getCollection } from 'astro:content';
 
-export async function getPosts({ includeSamples = false } = {}) {
+export async function getPosts() {
   return (await getCollection('blog', ({ data }) =>
-    !data.draft && data.pubDate <= new Date() && (includeSamples || !data.sample)
+    !data.draft && data.pubDate <= new Date()
   )).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 

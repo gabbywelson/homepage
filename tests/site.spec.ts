@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import migration from '../docs/garden-migration.json' with { type: 'json' };
+import redirects from '../src/data/legacy-redirects.json' with { type: 'json' };
 
-const routes = ['/', '/blog/', '/blog/a-small-beginning/', '/resume/', '/garden/', '/now/', '/uses/', '/about/', '/colophon/'];
+const routes = [...new Set(['/', '/blog/', '/resume/', ...migration.entries.map(entry => entry.route)])];
 
 test('keyboard toggle persists across reloads and navigation', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });
@@ -96,7 +98,7 @@ test('reduced motion, larger text, and same-origin assets', async ({ page }) => 
   expect(remoteAssets).toEqual([]);
 });
 
-test('RSS, sitemap, and local links resolve; sample stays out of feeds', async ({ page, request }) => {
+test('RSS, sitemap, and local links resolve; imported posts replace the sample', async ({ page, request }) => {
   for (const route of routes) {
     await page.goto(route);
     const links = await page.locator('a[href^="/"], link[href^="/"]').evaluateAll(elements => [...new Set(elements.map(el => el.getAttribute('href')!))]);
@@ -106,10 +108,65 @@ test('RSS, sitemap, and local links resolve; sample stays out of feeds', async (
   expect(rss.headers()['content-type']).toContain('xml');
   expect(await rss.text()).toContain('<rss');
   expect(await rss.text()).not.toContain('A small beginning');
+  expect((await rss.text()).match(/<item>/g)).toHaveLength(6);
   const sitemap = await request.get('/sitemap-0.xml');
   expect(await sitemap.text()).toContain('https://welson.net/garden/');
   expect(await sitemap.text()).not.toContain('a-small-beginning');
+  for (const entry of migration.entries) expect(await sitemap.text()).toContain(`https://welson.net${entry.route}`);
+  for (const legacy of Object.keys(redirects)) expect(await sitemap.text()).not.toContain(`<loc>https://welson.net${legacy}/</loc>`);
   const missing = await page.goto('/this-path-does-not-exist/');
   expect(missing?.status()).toBe(404);
   await expect(page.locator('h1')).toHaveText('A little lost.');
+  expect((await page.goto('/blog/a-small-beginning/'))?.status()).toBe(404);
+});
+
+test('migrated writing preserves chronology, footnotes, local images, and dated snapshots', async ({ page }) => {
+  await page.goto('/blog/');
+  await expect(page.locator('.post-list > li')).toHaveCount(6);
+  const dates = await page.locator('.post-list time').evaluateAll(elements => elements.map(el => el.getAttribute('datetime')!.slice(0, 10)));
+  expect(dates).toEqual(['2025-11-30', '2025-06-15', '2025-06-12', '2025-06-08', '2025-06-03', '2025-03-23']);
+  for (const route of routes) {
+    await page.goto(route);
+    await expect(page.locator('main')).not.toContainText('[[');
+    await expect(page.locator('.sample-note, .sample-label')).toHaveCount(0);
+    await expect(page.locator('a[href="/weeks"], a[href="/notes/kiln-review"]')).toHaveCount(0);
+    const brokenFragments = await page.locator('a[href^="#"]').evaluateAll(links => links
+      .map(link => link.getAttribute('href')!).filter(href => href.length > 1 && !document.getElementById(decodeURIComponent(href.slice(1)))));
+    expect(brokenFragments, route).toEqual([]);
+    const images = page.locator('main img');
+    for (const img of await images.all()) {
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+      expect(await img.evaluate((el: HTMLImageElement) => new URL(el.currentSrc).origin === location.origin)).toBe(true);
+      await expect(img).toHaveAttribute('alt');
+    }
+  }
+  await page.goto('/blog/coming-out/');
+  await expect(page.locator('[data-footnote-ref]')).toHaveCount(2);
+  const firstFootnote = page.locator('[data-footnote-ref]').first();
+  const target = await firstFootnote.getAttribute('href');
+  await firstFootnote.click();
+  expect(new URL(page.url()).hash).toBe(target);
+  await expect(page.locator('[data-footnote-backref]').first()).toBeVisible();
+  await page.goto('/now/');
+  await expect(page.locator('.content-date time')).toHaveAttribute('datetime', '2025-03-06T00:00:00.000Z');
+  await expect(page.locator('.prose')).toContainText('Home Assistant');
+  await page.goto('/uses/');
+  await expect(page.locator('.prose h2')).toHaveText(['Desk Setup', 'On The Go']);
+  await expect(page.locator('.prose img')).toHaveCount(1);
+});
+
+test('legacy URLs provide static redirects to the migrated content without JavaScript', async ({ browser, request }) => {
+  for (const [from, to] of Object.entries(redirects)) {
+    const response = await request.get(`${from}/`);
+    expect(response.ok(), from).toBe(true);
+    expect(await response.text(), from).toContain(`url=${to}`);
+    expect((await request.get(to)).ok(), to).toBe(true);
+  }
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4322/posts/coming-out/');
+  await page.waitForURL('http://127.0.0.1:4322/blog/coming-out/');
+  await expect(page.locator('h1')).toHaveText('Coming out.');
+  await context.close();
 });

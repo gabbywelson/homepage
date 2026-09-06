@@ -6,13 +6,13 @@ import ThemeDial from '../../components/ThemeDial.astro';
 import { getPosts, formatDate } from '../../lib/posts';
 import { site } from '../../data/site';
 export async function getStaticPaths() {
-  return (await getPosts({ includeSamples: true })).map((post) => ({ params: { id: post.id }, props: { post } }));
+  return (await getPosts()).map((post) => ({ params: { id: post.id }, props: { post } }));
 }
 interface Props { post: CollectionEntry<'blog'>; }
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-<BaseLayout title={post.data.title} description={post.data.description} noindex={post.data.sample} article published={post.data.pubDate}>
+<BaseLayout title={post.data.title} description={post.data.description} article published={post.data.pubDate}>
   <div class="article-tools"><a class="quiet-link back-link" href="/blog/"><Icon name="right" /> Back to the blog</a><ThemeDial /></div>
   <article class="h-entry">
     <header class="post-heading">
@@ -21,7 +21,6 @@ const { Content } = await render(post);
       <p class="page-intro p-summary">{post.data.description}</p>
       {post.data.updatedDate && <p class="post-meta">Updated <time class="dt-updated" datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time></p>}
     </header>
-    {post.data.sample && <p class="sample-note">A sample entry, here to try on the typography. Real words to come.</p>}
     <div class="prose e-content"><Content /></div>
     <a class="u-url sr-only" href={`/blog/${post.id}/`}>Permalink</a>
   </article>

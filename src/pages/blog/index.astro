@@ -2,14 +2,14 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import Icon from '../../components/Icon.astro';
 import { getPosts, formatDate } from '../../lib/posts';
-const posts = await getPosts({ includeSamples: true });
+const posts = await getPosts();
 ---
 <PageLayout title="Blog" eyebrow="Notes from here" intro="A place for little discoveries, works in progress, and thoughts that wanted a home.">
   <div class="h-feed">
     <span class="p-name sr-only">Gabby's blog</span>
     <ol class="post-list">
       {posts.map((post) => <li class="h-entry">
-        <div class="post-meta"><time class="dt-published" datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>{post.data.sample && <span class="sample-label">Sample post</span>}</div>
+        <div class="post-meta"><time class="dt-published" datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time></div>
         <h2><a class="u-url p-name" href={`/blog/${post.id}/`}>{post.data.title} <Icon name="arrow" /></a></h2>
         <p class="p-summary">{post.data.description}</p>
       </li>)}

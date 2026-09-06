@@ -2,8 +2,18 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import Icon from '../components/Icon.astro';
 import { gardenPages } from '../data/site';
+import { getCollection, getEntry, render } from 'astro:content';
+import { getPosts, formatDate } from '../lib/posts';
+const entry = await getEntry('pages', 'garden');
+if (!entry) throw new Error('Missing garden introduction');
+const { Content } = await render(entry);
+const notes = (await getCollection('notes')).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const recentPosts = (await getPosts()).slice(0, 3);
 ---
-<PageLayout title="Garden" eyebrow="Take the scenic route" intro="A few little paths off the main road. Some things change with the seasons; others stay a while.">
+<PageLayout title="Garden" description={entry.data.description} eyebrow="Take the scenic route">
+  <div class="prose garden-intro"><Content /></div>
+  <section class="page-section" aria-labelledby="garden-paths">
+    <h2 id="garden-paths">A few paths to follow</h2>
   <ul class="garden-list">
     {gardenPages.map((page) => <li><a href={`/${page.slug}/`}>
       <span class:list={['work-mark', page.tone]}><Icon name={page.icon} /></span>
@@ -11,4 +21,18 @@ import { gardenPages } from '../data/site';
       <Icon name="right" />
     </a></li>)}
   </ul>
+  </section>
+  <section class="page-section" aria-labelledby="garden-notes">
+    <h2 id="garden-notes">Growing here</h2>
+    <ul class="note-list">
+      {notes.map((note) => <li><a href={`/garden/${note.id}/`}>{note.data.title} <Icon name="right" /></a><p>{note.data.description}</p></li>)}
+    </ul>
+  </section>
+  <section class="page-section" aria-labelledby="recent-posts">
+    <h2 id="recent-posts">Recent posts</h2>
+    <ul class="note-list">
+      {recentPosts.map((post) => <li><a href={`/blog/${post.id}/`}>{post.data.title}</a><p><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time></p></li>)}
+    </ul>
+    <p class="rss-note"><a class="quiet-link" href="/blog/">All posts <Icon name="right" /></a></p>
+  </section>
 </PageLayout>

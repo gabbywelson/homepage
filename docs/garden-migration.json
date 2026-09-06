@@ -1,0 +1,229 @@
+{
+  "importedOn": "2026-09-05",
+  "sourceRoot": "~/code/garden/content",
+  "entries": [
+    {
+      "source": "blog/2025 yearly theme update.md",
+      "destination": "src/content/blog/2025-yearly-theme-update.md",
+      "route": "/blog/2025-yearly-theme-update/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2025-03-23",
+        "modified": "2026-05-18T16:50:12.036-07:00",
+        "published": "2026-05-18T20:11:15.161-07:00",
+        "tags": [
+          "personal",
+          "yearly_themes"
+        ]
+      }
+    },
+    {
+      "source": "blog/coming out.md",
+      "destination": "src/content/blog/coming-out.md",
+      "route": "/blog/coming-out/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2025-06-03",
+        "modified": "2026-05-18T16:50:14.246-07:00",
+        "published": "2026-05-18T20:11:15.161-07:00",
+        "tags": [
+          "trans"
+        ]
+      }
+    },
+    {
+      "source": "blog/thirty one, a year in review.md",
+      "destination": "src/content/blog/thirty-one-a-year-in-review.md",
+      "route": "/blog/thirty-one-a-year-in-review/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2025-06-12",
+        "modified": "2026-05-18T16:50:16.182-07:00",
+        "published": "2026-05-18T20:11:15.162-07:00",
+        "tags": [
+          "personal",
+          "reflection"
+        ]
+      }
+    },
+    {
+      "source": "blog/weeknotes/weeknotes - june 8, 2025.md",
+      "destination": "src/content/blog/weeknotes/weeknotes-june-8-2025.md",
+      "route": "/blog/weeknotes/weeknotes-june-8-2025/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2025-06-08",
+        "modified": "2026-05-18T16:50:18.814-07:00",
+        "published": "2026-05-18T20:11:15.162-07:00",
+        "tags": [
+          "weeknotes"
+        ]
+      }
+    },
+    {
+      "source": "blog/weeknotes/weeknotes - june 15, 2025.md",
+      "destination": "src/content/blog/weeknotes/weeknotes-june-15-2025.md",
+      "route": "/blog/weeknotes/weeknotes-june-15-2025/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2025-06-15",
+        "modified": "2026-05-18T16:50:20.709-07:00",
+        "published": "2026-05-18T20:11:15.162-07:00",
+        "tags": [
+          "weeknotes"
+        ]
+      }
+    },
+    {
+      "source": "blog/weeknotes/weeknotes - november 30, 2025.md",
+      "destination": "src/content/blog/weeknotes/weeknotes-november-30-2025.md",
+      "route": "/blog/weeknotes/weeknotes-november-30-2025/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2025-11-30",
+        "modified": "2026-05-18T16:50:22.657-07:00",
+        "published": "2026-05-18T20:11:15.162-07:00",
+        "tags": [
+          "weeknotes"
+        ]
+      }
+    },
+    {
+      "source": "topics/Kimchi.md",
+      "destination": "src/content/notes/kimchi.md",
+      "route": "/garden/kimchi/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.624-07:00",
+        "modified": "2026-05-18T16:49:42.699-07:00",
+        "published": "2026-05-18T20:11:15.165-07:00"
+      }
+    },
+    {
+      "source": "topics/Nori.md",
+      "destination": "src/content/notes/nori.md",
+      "route": "/garden/nori/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.624-07:00",
+        "modified": "2026-05-18T16:49:45.488-07:00",
+        "published": "2026-05-18T20:11:15.165-07:00"
+      }
+    },
+    {
+      "source": "topics/San Francisco.md",
+      "destination": "src/content/notes/san-francisco.md",
+      "route": "/garden/san-francisco/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.624-07:00",
+        "modified": "2026-05-18T16:49:47.610-07:00",
+        "published": "2026-05-18T20:11:15.165-07:00"
+      }
+    },
+    {
+      "source": "topics/digital garden.md",
+      "destination": "src/content/notes/digital-garden.md",
+      "route": "/garden/digital-garden/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T20:11:15.165-07:00",
+        "modified": "2026-05-18T20:11:15.165-07:00",
+        "published": "2026-05-18T20:11:15.165-07:00"
+      }
+    },
+    {
+      "source": "topics/software engineer.md",
+      "destination": "src/content/notes/software-engineer.md",
+      "route": "/garden/software-engineer/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.624-07:00",
+        "modified": "2026-05-18T16:49:49.736-07:00",
+        "published": "2026-05-18T20:11:15.165-07:00"
+      }
+    },
+    {
+      "source": "topics/trans woman.md",
+      "destination": "src/content/notes/trans-woman.md",
+      "route": "/garden/trans-woman/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.624-07:00",
+        "modified": "2026-05-18T16:49:52.416-07:00",
+        "published": "2026-05-18T20:11:15.165-07:00"
+      }
+    },
+    {
+      "source": "about.md",
+      "destination": "src/content/pages/about.md",
+      "route": "/about/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.623-07:00",
+        "modified": "2026-05-18T16:49:59.488-07:00",
+        "published": "2026-05-18T20:11:15.164-07:00"
+      }
+    },
+    {
+      "source": "now.md",
+      "destination": "src/content/pages/now.md",
+      "route": "/now/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.623-07:00",
+        "modified": "2026-05-18T16:50:04.344-07:00",
+        "published": "2026-05-18T20:11:15.164-07:00"
+      }
+    },
+    {
+      "source": "uses.md",
+      "destination": "src/content/pages/uses.md",
+      "route": "/uses/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.623-07:00",
+        "modified": "2026-05-18T16:50:06.905-07:00",
+        "published": "2026-05-18T20:11:15.165-07:00"
+      }
+    },
+    {
+      "source": "index.md",
+      "destination": "src/content/pages/garden.md",
+      "route": "/garden/",
+      "originalMetadata": {
+        "publish": true,
+        "title": "welcome to my digital garden 👋",
+        "created": "2026-05-18T16:45:48.621-07:00",
+        "modified": "2026-05-18T16:49:24.645-07:00",
+        "published": "2026-05-18T16:49:24.645-07:00"
+      }
+    },
+    {
+      "source": "colophon.md",
+      "destination": "src/content/pages/colophon.md",
+      "route": "/colophon/",
+      "originalMetadata": {
+        "publish": true,
+        "created": "2026-05-18T16:45:48.623-07:00",
+        "modified": "2026-05-18T16:50:01.715-07:00",
+        "published": "2026-05-18T20:11:15.164-07:00"
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "source": "blog/growing my garden.md",
+      "reason": "Frontmatter only; no post body."
+    },
+    {
+      "source": "topics/recent-post-list.base",
+      "reason": "Obsidian list configuration replaced with the Astro blog collection."
+    }
+  ],
+  "missingFromSource": [
+    "/weeks",
+    "/notes/kiln-review",
+    "The top-of-post photos mentioned in the June 8 and November 30 weeknotes."
+  ]
+}

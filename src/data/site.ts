@@ -5,7 +5,7 @@ export const site = {
   description:
     "my personal corner of the web for writing, making things, and following little curiosities.",
   url: "https://welson.net",
-  // Enable only after replacing sample copy and preparing the real launch.
+  // Enable only for the real production launch.
   indexable: import.meta.env.SITE_INDEXABLE === "true",
   social: [
     { name: "GitHub", href: "https://github.com/gabbywelson", icon: "github" },
@@ -46,13 +46,6 @@ export const gardenPages = [
     description: "Tools, everyday things, and little essentials.",
     icon: "desktop",
     tone: "sage",
-  },
-  {
-    slug: "about",
-    title: "About",
-    description: "A little more about the person behind the pixels.",
-    icon: "flower",
-    tone: "rose",
   },
   {
     slug: "colophon",

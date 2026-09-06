@@ -70,6 +70,8 @@ main:focus { outline: none; }
 .work-list { list-style: none; padding: 0; margin: 0; }
 .work-item { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 14px; padding: 14px 0; }
 .work-item + .work-item { border-top: 1px solid var(--line); }
+.work-mark { width: 37px; height: 37px; display: grid; place-items: center; border-radius: 11px; }
+.work-mark .icon { width: 22px; height: 22px; }
 .rose { color: var(--rose); background: var(--rose-soft); }
 .sage { color: var(--sage); background: var(--sage-soft); }
 .lilac { color: var(--lilac); background: var(--lilac-soft); }
@@ -136,7 +138,18 @@ main:focus { outline: none; }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
 .prose table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
 .prose td, .prose th { padding: 8px 14px; text-align: left; border-bottom: 1px solid var(--line); }
-.sample-note { font-size: 0.8125rem; color: var(--muted); padding: 12px 16px; border-left: 2px solid var(--line); margin-bottom: 28px; }
+.content-date { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); margin-bottom: 28px; }
+.prose .footnotes { margin-top: 38px; border-top: 1px solid var(--line); padding-top: 20px; font-size: .875rem; }
+.prose .footnotes p + p { margin-top: 12px; }
+.prose li > ul, .prose li > ol { margin-top: 7px; }
+.prose h4 { margin-top: 24px; }
+.prose :target { scroll-margin-top: 24px; }
+.note-list { list-style: none; padding: 0; margin: 0; }
+.note-list li { padding: 16px 0; }
+.note-list li + li { border-top: 1px solid var(--line); }
+.note-list a { font-weight: 550; }
+.note-list a .icon { width: 16px; height: 16px; }
+.note-list p { color: var(--muted); font-size: .875rem; margin-top: 4px; }
 .garden-list { list-style: none; margin: 0; padding: 0; }
 .garden-list li + li { border-top: 1px solid var(--line); }
 .garden-list a { display: grid; grid-template-columns: 42px 1fr 20px; align-items: center; column-gap: 18px; padding: 23px 0; color: inherit; text-decoration: none; }
@@ -152,7 +165,6 @@ main:focus { outline: none; }
 .post-list a:hover { color: var(--rose); text-decoration: underline; }
 .post-list p { color: var(--muted); font-size: 0.9375rem; }
 .post-meta { color: var(--muted); font-family: var(--font-mono); font-size: 0.6875rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.sample-label { color: var(--rose); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; font-size: 0.625rem; }
 .post-heading h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 20px 0; }
 .post-heading { margin-bottom: 35px; }
 .post-heading .page-intro { margin: 20px 0 0; }

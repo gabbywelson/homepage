@@ -1,10 +1,10 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import ThemeDial from '../components/ThemeDial.astro';
-interface Props { title: string; intro?: string; eyebrow?: string; noindex?: boolean; }
-const { title, intro, eyebrow, noindex } = Astro.props;
+interface Props { title: string; intro?: string; description?: string; eyebrow?: string; noindex?: boolean; }
+const { title, intro, description = intro, eyebrow, noindex } = Astro.props;
 ---
-<BaseLayout title={title} description={intro} noindex={noindex}>
+<BaseLayout title={title} description={description} noindex={noindex}>
   <div class="page-heading"><div>{eyebrow && <p class="eyebrow">{eyebrow}</p>}<h1>{title}<span class="heading-dot">.</span></h1></div><ThemeDial /></div>
   {intro && <p class="page-intro">{intro}</p>}
   <slot />
