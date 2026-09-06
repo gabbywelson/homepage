@@ -1,0 +1,19 @@
+/* Shared structure for slotted pages. Markdown typography lives in prose.css. */
+.page-section {
+  margin-top: 38px;
+}
+
+.page-section > h2 {
+  margin-bottom: 16px;
+}
+
+.content-date {
+  margin-bottom: 28px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.content-footer {
+  margin-top: 30px;
+}

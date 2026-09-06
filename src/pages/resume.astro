@@ -1,36 +1,143 @@
 ---
+import '../styles/prose.css';
 import PageLayout from '../layouts/PageLayout.astro';
 import WorkList from '../components/WorkList.astro';
 import BrandLogo from '../components/BrandLogo.astro';
 import Icon from '../components/Icon.astro';
 import { education, skills } from '../data/work';
 ---
-<PageLayout title="Résumé" eyebrow="A few chapters" intro="The things I've worked on, the people I've learned from, and a few stops along the way.">
-  <div class="resume-summary prose">
-    <p>I'm a product-minded full-stack engineer building user-facing products from zero to one and at massive scale—from an LLM-powered platform as a founding engineer to LinkedIn Feed, used by tens of millions daily. My work spans TypeScript and React, design systems, trust and safety, accessibility, and developer experience.</p>
-    <p><a class="quiet-link" href="https://www.linkedin.com/in/gabbywelson/"><Icon name="linkedin" /> Find me on LinkedIn <Icon name="arrow" /></a></p>
+
+<PageLayout
+  title="Résumé"
+  eyebrow="A few chapters"
+  intro="The things I've worked on, the people I've learned from, and a few stops along the way."
+>
+  <div class="prose">
+    <p>
+      I'm a product-minded full-stack engineer building user-facing products
+      from zero to one and at massive scale—from an LLM-powered platform as a
+      founding engineer to LinkedIn Feed, used by tens of millions daily. My
+      work spans TypeScript and React, design systems, trust and safety,
+      accessibility, and developer experience.
+    </p>
+    <p>
+      <a class="quiet-link" href="https://www.linkedin.com/in/gabbywelson/"
+        ><Icon name="linkedin" /> Find me on LinkedIn <Icon name="arrow" /></a
+      >
+    </p>
   </div>
-  <section class="page-section" aria-labelledby="experience"><h2 id="experience">Experience</h2><WorkList detailed /></section>
+  <section class="page-section" aria-labelledby="experience">
+    <h2 id="experience">Experience</h2><WorkList detailed />
+  </section>
   <section class="page-section prose" aria-labelledby="earlier-experience">
     <h2 id="earlier-experience">Before software</h2>
-    <p>Before moving into tech, I worked as a business analyst at a language-learning startup, a community marketer at a values-driven solar company in Vermont, and an independent SAT tutor.</p>
+    <p>
+      Before moving into tech, I worked as a business analyst at a
+      language-learning startup, a community marketer at a values-driven solar
+      company in Vermont, and an independent SAT tutor.
+    </p>
   </section>
   <section class="page-section" aria-labelledby="education">
     <h2 id="education">Education & learning</h2>
     <ul class="education-list">
-      {education.map((entry) => <li>
-        <BrandLogo name={entry.brand} variant="list" />
-        <div>
-          <h3><a href={entry.href}>{entry.school}</a></h3>
-          <p>{entry.qualification}</p>
-          <p class="role-period">{entry.period}</p>
-          <p class="education-location">{entry.location}</p>
-        </div>
-      </li>)}
+      {
+        education.map((entry) => (
+          <li>
+            <BrandLogo name={entry.brand} variant="list" />
+            <div>
+              <h3>
+                <a href={entry.href}>{entry.school}</a>
+              </h3>
+              <p>{entry.qualification}</p>
+              <p class="education-list__period">{entry.period}</p>
+              <p class="education-list__location">{entry.location}</p>
+            </div>
+          </li>
+        ))
+      }
     </ul>
   </section>
   <section class="page-section" aria-labelledby="skills">
     <h2 id="skills">Skills & tools</h2>
-    <dl class="skills-list">{skills.map((skill) => <div><dt>{skill.label}</dt><dd>{skill.items}</dd></div>)}</dl>
+    <dl class="skills-list">
+      {
+        skills.map((skill) => (
+          <div>
+            <>
+              <dt>{skill.label}</dt>
+              <dd>{skill.items}</dd>
+            </>
+          </div>
+        ))
+      }
+    </dl>
   </section>
 </PageLayout>
+
+<style>
+  .education-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .education-list li {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    align-items: start;
+    gap: 14px;
+    padding: 20px 0;
+  }
+
+  .education-list li + li {
+    border-top: 1px solid var(--line);
+  }
+
+  .education-list a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .education-list a:hover {
+    color: var(--rose);
+    text-decoration: underline;
+  }
+
+  .education-list p {
+    font-size: 0.9375rem;
+  }
+
+  .education-list .education-list__period,
+  .education-list .education-list__location {
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+
+  .education-list__period {
+    margin-top: 5px;
+  }
+
+  .skills-list {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  .skills-list > div + div {
+    margin-top: 19px;
+  }
+
+  .skills-list dt {
+    font-weight: 600;
+  }
+
+  .skills-list dd {
+    margin: 4px 0 0;
+  }
+
+  @media (max-width: 370px) {
+    .education-list li {
+      grid-template-columns: 36px minmax(0, 1fr);
+      gap: 10px;
+    }
+  }
+</style>

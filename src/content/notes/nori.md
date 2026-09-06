@@ -1,5 +1,6 @@
 ---
 title: Nori
+priorityImage: ../../assets/garden/nori.png
 description: My beautiful tortie daughter.
 ---
 

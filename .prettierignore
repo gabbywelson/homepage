@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+test-results/
+playwright-report/
+reports/
+lighthouse-report/
+bun.lock
+public/
+# Preserve the typography and wrapping of imported writing.
+src/content/
+docs/garden-migration.json

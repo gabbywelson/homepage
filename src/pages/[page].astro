@@ -1,19 +1,39 @@
 ---
+import '../styles/prose.css';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import PageLayout from '../layouts/PageLayout.astro';
 import { formatDate } from '../lib/posts';
 
 export async function getStaticPaths() {
   // Garden has its own landing page, with live lists of notes and posts.
-  return (await getCollection('pages')).filter((entry) => entry.id !== 'garden')
+  return (await getCollection('pages'))
+    .filter((entry) => entry.id !== 'garden')
     .map((entry) => ({ params: { page: entry.id }, props: { entry } }));
 }
-interface Props { entry: CollectionEntry<'pages'>; }
+interface Props {
+  entry: CollectionEntry<'pages'>;
+}
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
-<PageLayout title={entry.data.title} eyebrow={entry.data.eyebrow} intro={entry.data.description}>
-  {entry.data.updatedDate && <p class="content-date">Last updated <time datetime={entry.data.updatedDate.toISOString()}>{formatDate(entry.data.updatedDate)}</time></p>}
+
+<PageLayout
+  title={entry.data.title}
+  eyebrow={entry.data.eyebrow}
+  intro={entry.data.description}
+>
+  {
+    entry.data.updatedDate && (
+      <p class="content-date">
+        Last updated{' '}
+        <time datetime={entry.data.updatedDate.toISOString()}>
+          {formatDate(entry.data.updatedDate)}
+        </time>
+      </p>
+    )
+  }
   <div class="prose"><Content /></div>
-  <p class="rss-note"><a class="quiet-link" href="/garden/">← Back to the garden</a></p>
+  <p class="content-footer">
+    <a class="quiet-link" href="/garden/">← Back to the garden</a>
+  </p>
 </PageLayout>

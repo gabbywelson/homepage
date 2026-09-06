@@ -8,7 +8,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://127.0.0.1:4322',
     // Uses the existing Chrome installation; override for Playwright Chromium.
-    channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome',
+    channel: process.env['PLAYWRIGHT_CHANNEL'] || 'chrome',
     viewport: { width: 1280, height: 900 },
     trace: 'retain-on-failure',
   },

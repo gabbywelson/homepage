@@ -1,5 +1,6 @@
 ---
 title: Kimchi
+priorityImage: ../../assets/garden/kimchi.png
 description: My handsome orange son.
 ---
 

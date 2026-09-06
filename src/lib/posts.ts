@@ -1,11 +1,22 @@
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
-export async function getPosts() {
-  return (await getCollection('blog', ({ data }) =>
-    !data.draft && data.pubDate <= new Date()
-  )).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+export async function getPosts(): Promise<CollectionEntry<'blog'>[]> {
+  const now = new Date();
+  return (
+    await getCollection(
+      'blog',
+      ({ data }) => !data.draft && data.pubDate <= now,
+    )
+  ).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
-export function formatDate(date: Date) {
-  return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(date);
+const dateFormatter = new Intl.DateTimeFormat('en', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+export function formatDate(date: Date): string {
+  return dateFormatter.format(date);
 }

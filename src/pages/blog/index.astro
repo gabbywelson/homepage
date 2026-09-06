@@ -4,17 +4,84 @@ import Icon from '../../components/Icon.astro';
 import { getPosts, formatDate } from '../../lib/posts';
 const posts = await getPosts();
 ---
-<PageLayout title="Blog" eyebrow="Notes from here" intro="A place for little discoveries, works in progress, and thoughts that wanted a home.">
+
+<PageLayout
+  title="Blog"
+  eyebrow="Notes from here"
+  intro="A place for little discoveries, works in progress, and thoughts that wanted a home."
+>
   <div class="h-feed">
     <span class="p-name sr-only">Gabby's blog</span>
     <ol class="post-list">
-      {posts.map((post) => <li class="h-entry">
-        <div class="post-meta"><time class="dt-published" datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time></div>
-        <h2><a class="u-url p-name" href={`/blog/${post.id}/`}>{post.data.title} <Icon name="arrow" /></a></h2>
-        <p class="p-summary">{post.data.description}</p>
-      </li>)}
+      {
+        posts.map((post) => (
+          <li class="h-entry">
+            <div class="post-list__meta">
+              <time
+                class="dt-published"
+                datetime={post.data.pubDate.toISOString()}
+              >
+                {formatDate(post.data.pubDate)}
+              </time>
+            </div>
+            <h2>
+              <a class="u-url p-name" href={`/blog/${post.id}/`}>
+                {post.data.title} <Icon name="arrow" />
+              </a>
+            </h2>
+            <p class="p-summary">{post.data.description}</p>
+          </li>
+        ))
+      }
     </ol>
-    {posts.length === 0 && <p>The notebook is open. The first post is on its way.</p>}
+    {
+      posts.length === 0 && (
+        <p>The notebook is open. The first post is on its way.</p>
+      )
+    }
   </div>
-  <p class="rss-note"><a class="quiet-link" href="/rss.xml"><Icon name="rss" /> Follow along with RSS</a></p>
+  <p class="content-footer">
+    <a class="quiet-link" href="/rss.xml"
+      ><Icon name="rss" /> Follow along with RSS</a
+    >
+  </p>
 </PageLayout>
+
+<style>
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-list li {
+    padding: 23px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .post-list h2 {
+    margin: 7px 0;
+    font-size: 1.25rem;
+  }
+
+  .post-list a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .post-list a:hover {
+    color: var(--rose);
+    text-decoration: underline;
+  }
+
+  .post-list p {
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  .post-list__meta {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+</style>

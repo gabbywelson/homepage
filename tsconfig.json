@@ -1,5 +1,17 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+    "types": ["node"],
+    "checkJs": true,
+    "noPropertyAccessFromIndexSignature": true
+  },
+  "include": [
+    ".astro/types.d.ts",
+    "src/**/*",
+    "tests/**/*",
+    "scripts/**/*",
+    "*.ts",
+    "*.mjs"
+  ],
+  "exclude": ["dist", "node_modules", "test-results", "playwright-report"]
 }

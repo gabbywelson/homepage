@@ -1,5 +1,6 @@
 ---
 title: Uses
+priorityImage: ../../assets/garden/desk.jpeg
 eyebrow: Everyday companions
 description: My desk setup, favorite tools, and the things I take along.
 ---
