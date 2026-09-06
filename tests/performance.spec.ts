@@ -1,5 +1,34 @@
 import { expect, test } from '@playwright/test';
 
+for (const deviceScaleFactor of [1, 2, 3]) {
+  test.describe(`Résumé logos at ${deviceScaleFactor}× pixel density`, () => {
+    test.use({ deviceScaleFactor });
+
+    test('every employer and education logo loads after scrolling', async ({
+      page,
+    }) => {
+      await page.goto('/resume/');
+      const logos = page.locator('img[data-brand]');
+      await expect(logos).toHaveCount(6);
+      for (const logo of await logos.all()) {
+        await logo.scrollIntoViewIfNeeded();
+        await expect
+          .poll(
+            () =>
+              logo.evaluate(
+                (image: HTMLImageElement) =>
+                  image.complete && image.naturalWidth > 0,
+              ),
+            {
+              message: `${await logo.getAttribute('data-brand')} logo must decode at ${deviceScaleFactor}×`,
+            },
+          )
+          .toBe(true);
+      }
+    });
+  });
+}
+
 interface LayoutShiftEntry extends PerformanceEntry {
   value: number;
   hadRecentInput: boolean;

@@ -24,6 +24,10 @@ Run Astro content-sync commands (`astro check`, `astro build`, dev) sequentially
 within a checkout: they share generated content caches. Avoid concurrent builds
 or sharing `node_modules/.astro` between checkouts.
 
+Restart the dev server after changing installed dependencies. Keep `sharp` as a
+direct dependency: Astro's development image endpoint needs its native runtime,
+and a stale process can return `MissingSharp` errors even when builds succeed.
+
 ```sh
 bun run format          # format code/config/docs, preserving imported writing
 bun run check           # Astro + TypeScript 7 + lint + formatting, zero warnings
