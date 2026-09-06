@@ -1,0 +1,25 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import { work } from '../data/work';
+interface Props { detailed?: boolean; }
+const { detailed = false } = Astro.props;
+---
+<ol class:list={['work-list', { detailed }]}>
+  {work.map((item) => (
+    <li class="work-item">
+      <BrandLogo name={item.brand} variant="list" />
+      <div class="work-info">
+        <h3>{item.href ? <a href={item.href}>{item.company}</a> : item.company}</h3>
+        {(!detailed || item.location) && <p>{detailed ? item.location : item.summary}</p>}
+      </div>
+      {item.period && <span class="work-period">{item.period}</span>}
+      {detailed && <div class="work-roles">
+        {item.roles.map((role) => <section class="work-role">
+          <h4>{role.title}</h4>
+          {role.period && <p class="role-period">{role.period}</p>}
+          <ul class="work-highlights">{role.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+        </section>)}
+      </div>}
+    </li>
+  ))}
+</ol>

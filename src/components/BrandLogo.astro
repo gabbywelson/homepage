@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import handshake from '../assets/brands/handshake.png';
+import linkedin from '../assets/brands/linkedin.png';
+import hackReactor from '../assets/brands/hack-reactor.png';
+import williams from '../assets/brands/williams-college.png';
+import exeter from '../assets/brands/exeter-college.png';
+
+const logos = { handshake, linkedin, 'hack-reactor': hackReactor, williams, exeter };
+export type BrandName = keyof typeof logos;
+interface Props { name: BrandName; variant?: 'inline' | 'list'; }
+const { name, variant = 'inline' } = Astro.props;
+const size = variant === 'list' ? 36 : 24;
+---
+<!-- Adjacent text supplies the name; decorative logos should not repeat it. -->
+<Image
+  src={logos[name]}
+  class="brand-logo"
+  data-brand={name}
+  data-variant={variant}
+  alt=""
+  aria-hidden="true"
+  width={size}
+  height={size}
+  widths={[size * 2, size * 3]}
+  sizes={`${size}px`}
+  format="webp"
+  fit="contain"
+  quality={90}
+  loading="eager"
+  decoding="async"
+/>
+
+<style>
+  .brand-logo {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    vertical-align: -.36em;
+    margin-right: 3px;
+    border-radius: 5px;
+    object-fit: contain;
+    background: white;
+  }
+  .brand-logo[data-brand='handshake'] { background: #d7fb45; }
+  .brand-logo[data-brand='linkedin'] { background: #2867b2; }
+  .brand-logo[data-brand='williams'] { background: #500082; }
+  .brand-logo[data-brand='exeter'] { padding: 3px; }
+  .brand-logo[data-variant='list'] {
+    display: block;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    border-radius: 9px;
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+// Hidden until enhancement is ready; the page follows the system theme without JS.
+---
+<div class="theme-control">
+  <button class="theme-dial" type="button" aria-label="Dark mode" aria-pressed="false" title="Switch to dark mode" hidden>
+    <span class="dial-case" aria-hidden="true">
+      <span class="dial-sky">
+        <span class="dial-stars">✦ <span>·</span> ˚</span>
+        <span class="dial-orbit">
+          <svg class="dial-sun" viewBox="0 0 40 40" fill="none">
+            <g stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
+              <path d="M20 2v4m0 28v4M2 20h4m28 0h4M7.3 7.3l2.9 2.9m19.6 19.6 2.9 2.9M7.3 32.7l2.9-2.9m19.6-19.6 2.9-2.9" />
+              <circle cx="20" cy="20" r="10.5" fill="currentColor" stroke="none" />
+            </g>
+            <g stroke="#765026" stroke-width="1.4" stroke-linecap="round"><path d="M16.5 18.5v1m7-1v1m-6 3q2.5 2.5 5 0" /></g>
+          </svg>
+          <svg class="dial-moon" viewBox="0 0 40 40" fill="none">
+            <path d="M30.5 26.5A14.5 14.5 0 0 1 14 5a15 15 0 1 0 16.5 21.5Z" fill="currentColor" />
+            <path d="M14 24q1.8 2 3.6 0m2.3 4q2 1 3.5-.8" stroke="#665580" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+        </span>
+        <span class="dial-horizon"></span>
+        <span class="dial-ground"><span></span></span>
+      </span>
+      <span class="dial-tick"></span>
+    </span>
+    <span class="theme-hint" aria-hidden="true"><span class="day-hint">a little moonlight?</span><span class="night-hint">a little sunshine?</span></span>
+  </button>
+</div>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.theme-dial');
+  if (button) {
+    const root = document.documentElement;
+    const system = window.matchMedia('(prefers-color-scheme: dark)');
+    let preference: string | null = null;
+    try { preference = localStorage.getItem('theme'); } catch { /* Storage is optional. */ }
+    if (preference !== 'light' && preference !== 'dark') preference = null;
+
+    const apply = (theme: 'light' | 'dark') => {
+      root.dataset.theme = theme;
+      button.setAttribute('aria-pressed', String(theme === 'dark'));
+      button.title = `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`;
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#202721' : '#faf8f3');
+    };
+    apply(preference === 'dark' || (!preference && system.matches) ? 'dark' : 'light');
+    button.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('theme-ready')));
+
+    button.addEventListener('click', () => {
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      preference = next;
+      apply(next);
+      try { localStorage.setItem('theme', next); } catch { /* Keep working without persistence. */ }
+    });
+    system.addEventListener('change', (event) => {
+      if (!preference) apply(event.matches ? 'dark' : 'light');
+    });
+    window.addEventListener('storage', (event) => {
+      if (event.key !== 'theme' && event.key !== null) return;
+      preference = event.newValue === 'dark' || event.newValue === 'light' ? event.newValue : null;
+      apply(preference === 'dark' || (!preference && system.matches) ? 'dark' : 'light');
+    });
+  }
+</script>
+
+<style>
+  .theme-control { width: 106px; height: 112px; flex: none; }
+  .theme-dial { padding: 0; border: 0; background: none; color: inherit; cursor: pointer; position: relative; display: flex; align-items: center; flex-direction: column; width: 106px; -webkit-tap-highlight-color: transparent; }
+  .theme-dial[hidden] { display: none; }
+  .dial-case { display: block; width: 86px; height: 86px; padding: 7px; position: relative; border-radius: 50%; background: var(--dial-case); box-shadow: 0 1px 0 #fff8 inset, 0 0 0 1px var(--line), 0 4px 9px #25342812; transform: rotate(-8deg); }
+  .dial-sky { display: block; width: 72px; height: 72px; position: relative; overflow: hidden; border-radius: 50%; background: var(--dial-sky); box-shadow: 0 1px 4px #25342820 inset; }
+  .dial-orbit { position: absolute; width: 72px; height: 90px; top: 0; left: 0; transform: rotate(0deg); }
+  .dial-sun, .dial-moon { position: absolute; width: 30px; height: 30px; left: 21px; }
+  .dial-sun { top: 7px; color: #d69b48; }
+  .dial-moon { bottom: 7px; color: #e8dfb4; transform: rotate(180deg); }
+  .dial-horizon { position: absolute; top: 45px; left: 0; right: 0; height: 1px; background: var(--dial-horizon); z-index: 2; }
+  .dial-ground { position: absolute; left: -8px; top: 46px; width: 90px; height: 40px; border-radius: 45% 70% 0 0; background: var(--dial-ground); z-index: 3; }
+  .dial-ground span { position: absolute; width: 80px; height: 35px; background: var(--dial-ground-front); border-radius: 80% 25% 0 0; top: 9px; left: 18px; }
+  .dial-tick { position: absolute; width: 2px; height: 4px; border-radius: 2px; background: var(--muted); bottom: 1px; left: 42px; opacity: .5; }
+  .dial-stars { position: absolute; z-index: 1; left: 13px; top: 11px; color: #e8dfb4; font-size: 12px; opacity: 0; transform: translateY(4px); }
+  .dial-stars span { display: inline-block; padding-left: 26px; }
+  .theme-hint { margin-top: 13px; width: 120px; max-width: calc(100% + 20px); font-family: var(--font-mono); font-size: 10px; color: var(--muted); transform: rotate(-5deg); }
+  .night-hint { display: none; }
+  :global([data-theme='dark']) .dial-orbit { transform: rotate(180deg); }
+  :global([data-theme='dark']) .dial-stars { opacity: 1; transform: translateY(0); }
+  :global([data-theme='dark']) .day-hint { display: none; }
+  :global([data-theme='dark']) .night-hint { display: inline; }
+  :global(.theme-ready) .dial-orbit { transition: transform 1050ms cubic-bezier(.4, 0, .15, 1); }
+  :global(.theme-ready) .dial-sky, :global(.theme-ready) .dial-ground, :global(.theme-ready) .dial-ground span, :global(.theme-ready) .dial-case { transition: background 850ms ease; }
+  :global(.theme-ready) .dial-stars { transition: opacity 650ms ease 150ms, transform 850ms ease; }
+  .theme-dial:hover .dial-case { transform: rotate(0deg) translateY(-2px); }
+  .theme-dial:active .dial-case { transform: rotate(3deg) scale(.95); }
+  :global(.theme-ready) .dial-case { transition: transform 250ms ease, background 850ms ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-dial *, :global(.theme-ready) .theme-dial * { transition: none !important; }
+    .theme-dial:hover .dial-case, .theme-dial:active .dial-case { transform: rotate(-8deg); }
+  }
+  @media (max-width: 480px) { .theme-control { width: 86px; } .theme-dial { width: 86px; } .theme-hint { font-size: 9px; } }
+</style>

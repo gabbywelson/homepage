@@ -1,0 +1,14 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Icon from '../components/Icon.astro';
+import { gardenPages } from '../data/site';
+---
+<PageLayout title="Garden" eyebrow="Take the scenic route" intro="A few little paths off the main road. Some things change with the seasons; others stay a while.">
+  <ul class="garden-list">
+    {gardenPages.map((page) => <li><a href={`/${page.slug}/`}>
+      <span class:list={['work-mark', page.tone]}><Icon name={page.icon} /></span>
+      <div><h2>{page.title}<span class="garden-path">/{page.slug}</span></h2><p>{page.description}</p></div>
+      <Icon name="right" />
+    </a></li>)}
+  </ul>
+</PageLayout>
