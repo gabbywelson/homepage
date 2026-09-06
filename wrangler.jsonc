@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "homepage",
+  "account_id": "0744cef4409ee295c3ea7ac489590fa1",
+  "compatibility_date": "2026-09-05",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "welson.net", "custom_domain": true },
+    { "pattern": "www.welson.net", "custom_domain": true },
+  ],
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page",
+  },
+}

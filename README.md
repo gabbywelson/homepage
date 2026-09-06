@@ -1,6 +1,6 @@
 # Gabby's homepage
 
-A small, static Astro site for `welson.net`, with a fresh design and published writing migrated from `~/code/garden`. The existing Quartz source remains untouched; no deployment or domain change has been made.
+A small, static Astro site for `welson.net`, with a fresh design and published writing migrated from `~/code/garden`. The site is hosted by the `homepage` Cloudflare Worker at https://welson.net. The existing Quartz repository remains migration reference material.
 
 ## Develop
 
@@ -119,12 +119,41 @@ conventions, checks and deployment constraints for future work.
 The original Maple Mono variable WOFF2 is sourced from the upstream `v7` branch:
 https://github.com/subframe7536/maple-font/tree/v7/woff2/var
 
-## Before the eventual launch
+## Deploy
 
-1. Review the imported historical content, update the dated Now/Uses information as desired, and review résumé details and social links.
-2. Review `src/data/legacy-redirects.json` and the unavailable source material listed in the migration notes. Astro generates portable HTML redirects; configure HTTP 301 redirects at the chosen host using the same mapping when deploying.
-3. Confirm `site` in `astro.config.mjs` and `url` in `src/data/site.ts` for the production domain.
-4. Build with `SITE_INDEXABLE=true` only for the real production launch. Until then the scaffold emits `noindex, nofollow` and disallows crawling in robots.txt. This is indexing control, not access control.
-5. Deploy the generated `dist/` directory through the chosen static host and configure its 404/redirect behavior.
+The public repository is https://github.com/gabbywelson/homepage. Cloudflare
+Workers Static Assets serves `dist/` without a server runtime or SSR adapter.
+`wrangler.jsonc` owns the `homepage` Worker and its `welson.net` and
+`www.welson.net` custom-domain bindings.
 
-No hosting provider is required by the source. The existing `welson.net` deployment remains the live site until the migration is ready.
+```sh
+bunx wrangler login
+bun run check
+bun run deploy
+```
+
+`deploy` always creates a fresh production build with `SITE_INDEXABLE=true`.
+Ordinary `bun run build` and development remain non-indexable. The workers.dev
+URL also receives an `X-Robots-Tag` header to avoid duplicate indexing.
+
+`build` runs `scripts/hosting.mjs` after Astro to generate real HTTP 301 rules
+from `src/data/legacy-redirects.json`, for both slash variants. `public/_headers`
+sets immutable caching for hashed `/_astro/` assets; HTML revalidates normally.
+Missing URLs serve the custom 404 with an HTTP 404 status. Configuration enforces
+trailing slashes for HTML routes.
+
+After deploying, check the homepage, résumé logos, a legacy redirect, a missing
+URL, robots.txt, sitemap, and hashed asset cache headers. Keep credentials in
+Wrangler's local login store or CI secrets, never in this repository.
+
+**DNS boundary:** this domain also hosts email. Only manage the two website
+custom-domain bindings above. Never replace the DNS zone or change MX, TXT
+(SPF/DKIM/DMARC), mail-related CNAMEs, or unrelated records during site deploys.
+
+Routine deploys use `scripts/deploy.mjs`: upload a uniquely tagged version, then
+send 100% of traffic to that exact version. These commands do not reapply domain
+bindings. Avoid noninteractive `wrangler deploy` or `wrangler triggers deploy`
+for routine releases: Wrangler may implicitly replace conflicting DNS records.
+Domain changes require a separately inspected changeset and DNS replacement
+disabled. The existing custom domains are recorded in `wrangler.jsonc` for
+reference and recovery, not changed by `bun run deploy`.

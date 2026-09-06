@@ -158,9 +158,21 @@ Use trailing slashes consistently. Keep redirects and migration mappings
 working; sitemap excludes redirects. `site.url` and Astro's `site` must agree.
 Preview builds intentionally emit `noindex, nofollow` and disallow robots. Do not
 enable indexing merely to improve Lighthouse scores. `SITE_INDEXABLE=true` is
-for an explicitly intended production build. Source maintenance does not imply
-a hosting change. Hosting must supply HTTPS, compression, immutable caching for
-hashed `/_astro/` assets, real HTTP redirects and the 404 status.
+for an explicitly intended production build. Production is hosted by the `homepage` Cloudflare Worker, configured in
+`wrangler.jsonc`. `bun run deploy` builds with indexing enabled and deploys the
+static `dist/` directory. `scripts/hosting.mjs` generates Cloudflare HTTP 301
+redirects from the shared mapping after every build. `public/_headers` owns
+hashed asset caching and response headers; Wrangler owns HTML/404 handling.
+
+The public GitHub repository is `gabbywelson/homepage`. Keep `.wrangler/`,
+`.dev.vars*`, tokens, and authentication state out of version control. Read the
+Wrangler configuration and relevant Cloudflare docs before changing hosting.
+
+`welson.net` also hosts email: deployment scope is limited to the existing
+`welson.net` and `www.welson.net` website custom-domain bindings. Never alter MX,
+SPF, DKIM, DMARC, mail-related CNAMEs, or unrelated DNS records. Do not replace
+or import the entire zone. Source maintenance alone does not authorize DNS or
+hosting changes.
 
 ## Astro documentation
 
@@ -174,3 +186,11 @@ Consult relevant official guides before changing these areas:
 - [Fonts](https://docs.astro.build/en/guides/fonts/)
 - [Images](https://docs.astro.build/en/guides/images/)
 - [Internationalization](https://docs.astro.build/en/guides/internationalization/)
+
+Routine deploys use `scripts/deploy.mjs`: upload a uniquely tagged version, then
+send 100% of traffic to that exact version. These commands do not reapply domain
+bindings. Avoid noninteractive `wrangler deploy` or `wrangler triggers deploy`
+for routine releases: Wrangler may implicitly replace conflicting DNS records.
+Domain changes require a separately inspected changeset and DNS replacement
+disabled. The existing custom domains are recorded in `wrangler.jsonc` for
+reference and recovery, not changed by `bun run deploy`.

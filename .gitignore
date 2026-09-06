@@ -29,3 +29,8 @@ lighthouse-report/
 
 # jetbrains setting folder
 .idea/
+
+# Cloudflare local state and secrets
+.wrangler/
+.dev.vars
+.dev.vars.*
