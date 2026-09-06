@@ -59,13 +59,16 @@ const active = (href: string) => path.startsWith(href) || (href === '/garden/' &
       <main id="main" tabindex="-1"><slot /></main>
       <footer class="site-footer">
         <div class="footer-main">
-          <a href="/" class="footer-signature h-card u-url" rel="author"><Icon name="flower" /><span class="p-name">Gabby Welson</span></a>
+          <a href="/" class="footer-signature h-card u-url" rel="author">
+              <span>© {new Date().getFullYear()},</span>
+              <span class="p-name">gabby welson (she/her)</span>
+          </a>
           <nav class="social-links" aria-label="Elsewhere and subscriptions">
             {site.social.map((social) => <a href={social.href} rel="me" aria-label={social.name} title={social.name}><Icon name={social.icon} /></a>)}
             <a href="/rss.xml" aria-label="Subscribe via RSS" title="Subscribe via RSS"><Icon name="rss" /></a>
           </nav>
         </div>
-        <div class="footer-note"><span>A small, growing thing. <span aria-hidden="true">❀</span></span><a href="/colophon/">Made with care <Icon name="arrow" /></a></div>
+        <div class="footer-note"><span>made with 💜 in san francisco</span><a href="/colophon/">read the colophon <Icon name="arrow" /></a></div>
       </footer>
     </div>
   </body>
