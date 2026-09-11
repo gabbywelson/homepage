@@ -1,11 +1,11 @@
+import english from '../i18n/messages/en.json';
 import type { GardenPage, SiteConfig } from '../types/site';
 
 /** Identity and public links. */
 export const site = {
   name: 'gabby welson',
   title: 'gabby welson',
-  description:
-    'my personal corner of the web for writing, making things, and following little curiosities.',
+  description: english.siteDescription,
   url: 'https://welson.net',
   // Enable only for the real production launch.
   indexable: import.meta.env['SITE_INDEXABLE'] === 'true',

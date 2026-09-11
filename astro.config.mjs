@@ -3,12 +3,18 @@ import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import redirects from './src/data/legacy-redirects.json';
 import { markdownProcessor } from './src/lib/markdown.ts';
+import gtConfig from './gt.config.json' with { type: 'json' };
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://welson.net',
   output: 'static',
   trailingSlash: 'always',
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', ...gtConfig.locales.map((code) => code.toLowerCase())],
+    routing: { prefixDefaultLocale: false },
+  },
   redirects,
   fonts: [
     {

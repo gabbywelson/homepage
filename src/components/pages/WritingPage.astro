@@ -1,0 +1,57 @@
+---
+import '../../styles/prose.css';
+import { render, type CollectionEntry } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import { formatDate } from '../../lib/posts';
+import { localeFromPath, sourcePath } from '../../i18n/locales';
+import { messages } from '../../i18n/messages';
+import { availableLink, availablePaths } from '../../i18n/content';
+
+interface Props {
+  entry: CollectionEntry<'pages'> | CollectionEntry<'notes'>;
+}
+const { entry } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+const ui = messages(locale);
+const paths = await availablePaths(locale);
+const updatedDate =
+  'updatedDate' in entry.data ? entry.data.updatedDate : undefined;
+const { Content } = await render(entry);
+---
+
+<PageLayout
+  title={entry.data.title}
+  eyebrow={'eyebrow' in entry.data
+    ? entry.data.eyebrow
+    : entry.collection === 'notes'
+      ? ui.noteEyebrow
+      : undefined}
+  intro={entry.collection === 'pages' ? entry.data.description : undefined}
+  description={entry.data.description}
+>
+  {
+    updatedDate && (
+      <p class="content-date">
+        {ui.lastUpdated}{' '}
+        <time datetime={updatedDate.toISOString()}>
+          {formatDate(updatedDate, locale)}
+        </time>
+      </p>
+    )
+  }
+  {
+    locale !== 'en' && (
+      <p class="content-footer">
+        <a href={sourcePath(Astro.url.pathname)} hreflang="en">
+          {ui.original}
+        </a>
+      </p>
+    )
+  }
+  <div class="prose"><Content /></div>
+  <p class="content-footer">
+    <a class="quiet-link" {...availableLink('/garden/', locale, paths)}
+      >← {ui.backGarden}</a
+    >
+  </p>
+</PageLayout>

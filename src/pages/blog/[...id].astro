@@ -1,110 +1,17 @@
 ---
-import '../../styles/prose.css';
-import { render, type CollectionEntry } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Icon from '../../components/Icon.astro';
-import ThemeDial from '../../components/ThemeDial.astro';
-import { getPosts, formatDate } from '../../lib/posts';
-import { site } from '../../data/site';
+import BlogPost from '../../components/pages/BlogPost.astro';
+import { getPosts } from '../../lib/posts';
+import { contentIdentity } from '../../i18n/locales';
+import type { CollectionEntry } from 'astro:content';
 export async function getStaticPaths() {
   return (await getPosts()).map((post) => ({
-    params: { id: post.id },
+    params: { id: contentIdentity(post.id).slug },
     props: { post },
   }));
 }
 interface Props {
   post: CollectionEntry<'blog'>;
 }
-const { post } = Astro.props;
-const { Content } = await render(post);
 ---
 
-<BaseLayout
-  title={post.data.title}
-  description={post.data.description}
-  article
-  published={post.data.pubDate}
->
-  <div class="post__tools">
-    <a class="quiet-link post__back" href="/blog/"
-      ><Icon name="right" /> Back to the blog</a
-    ><ThemeDial />
-  </div>
-  <article class="post h-entry">
-    <header class="post__heading">
-      <div class="post__meta">
-        <time class="dt-published" datetime={post.data.pubDate.toISOString()}
-          >{formatDate(post.data.pubDate)}</time
-        ><a class="p-author h-card" href="/">{site.name}</a>
-      </div>
-      <h1 class="p-name">
-        {post.data.title}<span class="heading-dot">.</span>
-      </h1>
-      <p class="post__intro p-summary">{post.data.description}</p>
-      {
-        post.data.updatedDate && (
-          <p class="post__meta">
-            Updated{' '}
-            <time
-              class="dt-updated"
-              datetime={post.data.updatedDate.toISOString()}
-            >
-              {formatDate(post.data.updatedDate)}
-            </time>
-          </p>
-        )
-      }
-    </header>
-    <div class="prose e-content"><Content /></div>
-    <a class="u-url sr-only" href={`/blog/${post.id}/`}>Permalink</a>
-  </article>
-</BaseLayout>
-
-<style>
-  .post__tools {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 25px;
-  }
-
-  .post__back {
-    margin-bottom: 25px;
-  }
-
-  .post__back :global(.icon) {
-    transform: rotate(180deg);
-  }
-
-  .post__heading {
-    margin-bottom: 35px;
-  }
-
-  .post__heading h1 {
-    margin: 20px 0;
-    font-size: clamp(2rem, 5vw, 2.8rem);
-  }
-
-  .post__intro {
-    max-width: 490px;
-    margin-top: 20px;
-    color: var(--muted);
-  }
-
-  .post__meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-  }
-
-  @media print {
-    .post__tools {
-      display: none;
-    }
-  }
-</style>
+<BlogPost post={Astro.props.post} />

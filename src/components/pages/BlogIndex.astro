@@ -1,0 +1,110 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { getPosts, formatDate } from '../../lib/posts';
+import { localeFromPath } from '../../i18n/locales';
+import { messages } from '../../i18n/messages';
+import { contentPath, localizedEntries } from '../../i18n/content';
+const locale = localeFromPath(Astro.url.pathname);
+const ui = messages(locale);
+const posts = await getPosts(locale);
+const otherWriting =
+  locale === 'en'
+    ? []
+    : [
+        ...(await localizedEntries('pages', locale)),
+        ...(await localizedEntries('notes', locale)),
+      ];
+---
+
+<PageLayout title={ui.blog} eyebrow={ui.blogEyebrow} intro={ui.blogIntro}>
+  <div class="h-feed">
+    <span class="p-name sr-only">{ui.blogFeed}</span>
+    <ol class="post-list">
+      {
+        posts.map((post) => (
+          <li class="h-entry">
+            <div class="post-list__meta">
+              <time
+                class="dt-published"
+                datetime={post.data.pubDate.toISOString()}
+              >
+                {formatDate(post.data.pubDate, locale)}
+              </time>
+            </div>
+            <h2>
+              <a class="u-url p-name" href={contentPath('blog', post.id)}>
+                {post.data.title} <Icon name="arrow" />
+              </a>
+            </h2>
+            <p class="p-summary">{post.data.description}</p>
+          </li>
+        ))
+      }
+    </ol>
+    {posts.length === 0 && <p>{ui.emptyBlog}</p>}
+  </div>
+  {
+    otherWriting.length > 0 && (
+      <section class="page-section" aria-labelledby="translated-writing">
+        <h2 id="translated-writing">{ui.gardenPaths}</h2>
+        <ul class="post-list">
+          {otherWriting.map((entry) => (
+            <li>
+              <a href={contentPath(entry.collection, entry.id)}>
+                {entry.data.title}
+              </a>
+              <p>{entry.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+  <p class="content-footer">
+    <a
+      class="quiet-link"
+      href={locale === 'en' ? '/rss.xml' : `/${locale.toLowerCase()}/rss.xml`}
+      ><Icon name="rss" /> {ui.followRss}</a
+    >
+  </p>
+</PageLayout>
+
+<style>
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-list li {
+    padding: 23px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .post-list h2 {
+    margin: 7px 0;
+    font-size: 1.25rem;
+  }
+
+  .post-list a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .post-list a:hover {
+    color: var(--rose);
+    text-decoration: underline;
+  }
+
+  .post-list p {
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  .post-list__meta {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+</style>

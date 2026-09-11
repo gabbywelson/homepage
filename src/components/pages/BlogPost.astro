@@ -1,0 +1,122 @@
+---
+import '../../styles/prose.css';
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import ThemeDial from '../../components/ThemeDial.astro';
+import { formatDate } from '../../lib/posts';
+import { site } from '../../data/site';
+import { localeFromPath, sourcePath } from '../../i18n/locales';
+import { messages } from '../../i18n/messages';
+import { contentPath, availableLink, availablePaths } from '../../i18n/content';
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+const { post } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+const ui = messages(locale);
+const paths = await availablePaths(locale);
+const link = (path: string) => availableLink(path, locale, paths);
+const { Content } = await render(post);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  article
+  published={post.data.pubDate}
+>
+  <div class="post__tools">
+    <a class="quiet-link post__back" {...link('/blog/')}
+      ><Icon name="right" /> {ui.backBlog}</a
+    ><ThemeDial />
+  </div>
+  <article class="post h-entry">
+    <header class="post__heading">
+      <div class="post__meta">
+        <time class="dt-published" datetime={post.data.pubDate.toISOString()}
+          >{formatDate(post.data.pubDate, locale)}</time
+        ><a class="p-author h-card" {...link('/')}>{site.name}</a>
+      </div>
+      <h1 class="p-name">
+        {post.data.title}<span class="heading-dot">.</span>
+      </h1>
+      <p class="post__intro p-summary">{post.data.description}</p>
+      {
+        post.data.updatedDate && (
+          <p class="post__meta">
+            {ui.updated}{' '}
+            <time
+              class="dt-updated"
+              datetime={post.data.updatedDate.toISOString()}
+            >
+              {formatDate(post.data.updatedDate, locale)}
+            </time>
+          </p>
+        )
+      }
+    </header>
+    {
+      locale !== 'en' && (
+        <p class="content-footer">
+          <a href={sourcePath(Astro.url.pathname)} hreflang="en">
+            {ui.original}
+          </a>
+        </p>
+      )
+    }
+    <div class="prose e-content"><Content /></div>
+    <a class="u-url sr-only" href={contentPath('blog', post.id)}
+      >{ui.permalink}</a
+    >
+  </article>
+</BaseLayout>
+
+<style>
+  .post__tools {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 25px;
+  }
+
+  .post__back {
+    margin-bottom: 25px;
+  }
+
+  .post__back :global(.icon) {
+    transform: rotate(180deg);
+  }
+
+  .post__heading {
+    margin-bottom: 35px;
+  }
+
+  .post__heading h1 {
+    margin: 20px 0;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+  }
+
+  .post__intro {
+    max-width: 490px;
+    margin-top: 20px;
+    color: var(--muted);
+  }
+
+  .post__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+
+  @media print {
+    .post__tools {
+      display: none;
+    }
+  }
+</style>

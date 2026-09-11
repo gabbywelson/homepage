@@ -1,0 +1,21 @@
+{
+  "$schema": "https://assets.gtx.dev/config-schema.json",
+  "defaultLocale": "en",
+  "locales": ["es", "fr", "zh-CN"],
+  "files": {
+    "md": {
+      "include": [
+        "src/content/blog/[locale]/**/*.md",
+        "src/content/pages/[locale]/**/*.md",
+        "src/content/notes/[locale]/**/*.md"
+      ]
+    },
+    "json": {
+      "include": ["src/i18n/messages/[locale].json"]
+    }
+  },
+  "options": {
+    "saveLocal": true
+  },
+  "publish": false
+}
