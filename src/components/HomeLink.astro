@@ -1,0 +1,68 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import type { BrandName } from '../types/site';
+import type { IconName } from '../lib/icons';
+import BrandLogo from './BrandLogo.astro';
+import Icon from './Icon.astro';
+import { availableLink, availablePaths } from '../i18n/content';
+import { localeFromPath, sourcePath } from '../i18n/locales';
+interface Props extends HTMLAttributes<'a'> {
+  icon?: 'flower';
+}
+const {
+  href: destination,
+  icon: overrideIcon,
+  class: className,
+  ...attributes
+} = Astro.props;
+const href = destination?.toString() ?? '';
+const locale = localeFromPath(Astro.url.pathname);
+const link = availableLink(href, locale, await availablePaths(locale));
+const brands: Record<string, BrandName> = {
+  'https://joinhandshake.com/ai': 'handshake',
+  'https://en.wikipedia.org/wiki/LinkedIn': 'linkedin',
+  'https://en.wikipedia.org/wiki/Hack_Reactor': 'hack-reactor',
+  'https://www.williams.edu/': 'williams',
+};
+const brand = brands[href];
+const path = sourcePath(href);
+const sage = brand === 'handshake' || path === '/garden/';
+const rose = path === '/blog/';
+const icon: IconName | undefined =
+  overrideIcon ??
+  (path === '/garden/' ? 'plant' : rose ? 'notebook' : undefined);
+---
+
+<a
+  {...attributes}
+  {...link}
+  class:list={[
+    'home-link',
+    className,
+    {
+      'home-link--brand': brand,
+      'home-link--sage': sage,
+      'home-link--rose': rose,
+    },
+  ]}
+  >{brand ? <BrandLogo name={brand} /> : icon ? <Icon name={icon} /> : null}{
+    (brand || icon) && ' '
+  }<slot /></a
+>
+
+<style>
+  .home-link {
+    --icon-size: 21px;
+    font-weight: 550;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  }
+  .home-link--brand {
+    white-space: nowrap;
+  }
+  .home-link--sage {
+    color: var(--sage);
+  }
+  .home-link--rose {
+    color: var(--rose);
+  }
+</style>

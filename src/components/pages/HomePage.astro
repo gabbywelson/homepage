@@ -4,19 +4,30 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ThemeDial from '../ThemeDial.astro';
 import WorkList from '../WorkList.astro';
 import Icon from '../Icon.astro';
-import BrandLogo from '../BrandLogo.astro';
+import { render } from 'astro:content';
+import HomeAccent from '../HomeAccent.astro';
+import HomeLink from '../HomeLink.astro';
+import { profileContent } from '../../i18n/profile';
 import { availableLink, availablePaths } from '../../i18n/content';
 import { localeFromPath } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 const locale = localeFromPath(Astro.url.pathname);
 const ui = messages(locale);
+const content = await profileContent('/', locale);
+const copy = content.home.data;
+const { Content } = await render(content.home);
+const fallback = content.locale !== locale;
 const paths = await availablePaths(locale);
 const link = (path: string) => availableLink(path, locale, paths);
 ---
 
-<BaseLayout contentLanguage="en" canonicalPath="/">
+<BaseLayout
+  contentLanguage={content.locale}
+  canonicalPath={fallback ? '/' : undefined}
+  description={copy.description}
+>
   {
-    locale !== 'en' && (
+    fallback && (
       <p class="content-footer" lang={locale}>
         {ui.englishLink} ·{' '}
         <a href="/" hreflang="en">
@@ -28,92 +39,41 @@ const link = (path: string) => availableLink(path, locale, paths);
   <section class="home-intro" aria-labelledby="hello">
     <div class="home-intro__heading">
       <div>
-        <p class="eyebrow">hey there <span aria-hidden="true">✳</span></p><h1
-          id="hello"
-        >
-          I'm Gabby<span class="heading-dot">.</span>
+        <p class="eyebrow">
+          {copy.eyebrow}
+          <span aria-hidden="true">✳</span>
+        </p><h1 id="hello">
+          {copy.title}<span class="heading-dot">.</span>
         </h1>
       </div>
       <ThemeDial />
     </div>
     <div class="home-intro__copy">
-      <p>
-        I’m a <span class="inline-emphasis"
-          ><span aria-hidden="true">👩🏻‍💻</span> software engineer</span
-        >, cat mom to Nori and Kimchi, collector of hobbies, and a curious
-        lifelong learner. I live in San Francisco, but New England will always
-        feel like home.
-      </p>
-      <p>
-        These days, I’m helping people find meaningful work training next-gen AI
-        models as a founding engineer at <a
-          class="inline-link inline-link--sage inline-link--brand"
-          href="https://joinhandshake.com/ai"
-          ><BrandLogo name="handshake" /> Handshake AI</a
-        >, tinkering on some (still top-secret) side projects, and finding time
-        to <a class="inline-link inline-link--sage" {...link('/garden/')}
-          ><Icon name="plant" /> tend to my digital garden</a
-        >.
-      </p>
-      <p>
-        Before Handshake, I grew from an engineering apprentice into a senior
-        software engineer at <a
-          class="inline-link inline-link--brand"
-          href="https://en.wikipedia.org/wiki/LinkedIn"
-          ><BrandLogo name="linkedin" /> LinkedIn</a
-        >. I learned to code at <a
-          class="inline-link inline-link--brand"
-          href="https://en.wikipedia.org/wiki/Hack_Reactor"
-          ><BrandLogo name="hack-reactor" /> Hack Reactor</a
-        >, where I later taught as a Software Engineer in Residence. Some of the
-        work I’m proudest of has been making software more accessible and
-        helping other engineers from nontraditional backgrounds find their
-        footing.
-      </p>
-      <p>
-        My path into tech had a few side quests. After studying political
-        science and leadership studies at <a
-          class="inline-link inline-link--brand"
-          href="https://www.williams.edu/"
-          ><BrandLogo name="williams" /> Williams College</a
-        >, I worked as a business analyst at a language-learning startup, a
-        community marketer at a values-driven solar company in Vermont, and an
-        independent SAT tutor.
-      </p>
-      <p>
-        Away from work, you might find me tinkering with my <span
-          class="inline-emphasis"><Icon name="coffee" /> espresso setup</span
-        >, lost in a good book, or spelunking down a Wikipedia rabbit hole. I
-        love journaling and collecting stationery, trying my hand at photography
-        around San Francisco, and cooking for friends and family—with a cozy
-        game or some quality cat time in between.
-      </p>
-      <p>
-        This is my little home on the internet. A place for <a
-          class="inline-link inline-link--rose"
-          {...link('/blog/')}><Icon name="notebook" /> words</a
-        >, <a class="inline-link inline-link--sage" {...link('/garden/')}
-          ><Icon name="flower" /> growing things</a
-        >, and whatever comes next. Make yourself at home.
-      </p>
+      <Content components={{ a: HomeLink, Accent: HomeAccent, HomeLink }} />
     </div>
     <a class="quiet-link home-intro__now" {...link('/now/')}
-      ><span class="home-intro__status" aria-hidden="true"></span> What I'm up to
-      now <Icon name="right" /></a
+      ><span class="home-intro__status" aria-hidden="true"></span>
+      {copy.nowLabel}
+      <Icon name="right" /></a
     >
   </section>
   <section class="home-work" aria-labelledby="work-heading">
     <div class="home-work__heading">
-      <h2 id="work-heading">Work</h2><a {...link('/resume/')} class="quiet-link"
-        >The longer version <Icon name="arrow" /></a
+      <h2 id="work-heading">{copy.workTitle}</h2><a
+        {...link('/resume/')}
+        class="quiet-link">{copy.resumeLabel} <Icon name="arrow" /></a
       >
     </div>
-    <WorkList />
+    <WorkList
+      entries={content.resume}
+      locale={content.locale}
+      currentLabel={copy.currentLabel}
+    />
   </section>
   <aside class="garden-invitation">
     <Icon name="plant" /><p>
-      There's a little more down the garden path.<br /><a {...link('/garden/')}
-        >Take a look around <Icon name="right" /></a
+      {copy.invitation}<br /><a {...link('/garden/')}
+        >{copy.gardenLabel} <Icon name="right" /></a
       >
     </p><span aria-hidden="true" class="garden-invitation__asterisk">✳</span>
   </aside>
@@ -136,37 +96,8 @@ const link = (path: string) => availableLink(path, locale, paths);
     font-size: 0.9375rem;
   }
 
-  .home-intro__copy p + p {
+  .home-intro__copy :global(p + p) {
     margin-top: 20px;
-  }
-
-  .inline-link {
-    --icon-size: 21px;
-    font-weight: 550;
-    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
-  }
-
-  .inline-link--brand {
-    white-space: nowrap;
-  }
-
-  .inline-link--sage {
-    color: var(--sage);
-  }
-
-  .inline-link--rose {
-    color: var(--rose);
-  }
-
-  .inline-emphasis {
-    --icon-size: 21px;
-    --icon-color: var(--gold);
-    font-weight: 500;
-  }
-
-  .inline-emphasis > span {
-    margin-right: 3px;
-    font-size: 1.1875rem;
   }
 
   .home-intro__now {

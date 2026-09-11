@@ -51,10 +51,13 @@ build/check/dev processes sequentially because they share generated content cach
 
 ## Where to edit
 
+See [Editing the homepage and résumé](docs/profile-content.md) for examples,
+inline components, dates, and the translation workflow.
+
 | What                                              | File                                                     |
 | ------------------------------------------------- | -------------------------------------------------------- |
-| Homepage introduction and inline links            | `src/pages/index.astro`                                  |
-| Work entries, role details, education, and skills | `src/data/work.ts`                                       |
+| Homepage introduction and inline links            | `src/content/home/en/index.mdx`                          |
+| Work entries, role details, education, and skills | `src/content/resume/en/`                                 |
 | Name, description, social profiles, garden links  | `src/data/site.ts`                                       |
 | Color palette and shared document defaults        | `src/styles/tokens.css`, `src/styles/global.css`         |
 | Markdown typography and shared content spacing    | `src/styles/prose.css`, `src/styles/content.css`         |

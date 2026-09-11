@@ -4,22 +4,44 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import WorkList from '../WorkList.astro';
 import BrandLogo from '../BrandLogo.astro';
 import Icon from '../Icon.astro';
-import { education, skills } from '../../data/work';
+import { render } from 'astro:content';
+import {
+  profileContent,
+  resumeEntry,
+  resumeEntries,
+  formatPeriod,
+} from '../../i18n/profile';
 import { localeFromPath } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 const locale = localeFromPath(Astro.url.pathname);
 const ui = messages(locale);
+const content = await profileContent('/resume/', locale);
+const fallback = content.locale !== locale;
+const intro = resumeEntry(content.resume, 'intro', 'intro');
+const before = resumeEntry(content.resume, 'section', 'before-software');
+const { Content: Intro } = await render(intro);
+const { Content: Before } = await render(before);
+const copy = intro.data;
+const education = resumeEntries(content.resume, 'education').map(
+  (entry) => entry.data,
+);
+const skills = await Promise.all(
+  resumeEntries(content.resume, 'skill').map(async (entry) => ({
+    title: entry.data.title,
+    ...(await render(entry)),
+  })),
+);
 ---
 
 <PageLayout
-  contentLanguage="en"
-  canonicalPath="/resume/"
-  title="Résumé"
-  eyebrow="A few chapters"
-  intro="The things I've worked on, the people I've learned from, and a few stops along the way."
+  contentLanguage={content.locale}
+  canonicalPath={fallback ? '/resume/' : undefined}
+  title={copy.title}
+  eyebrow={copy.eyebrow}
+  intro={copy.description}
 >
   {
-    locale !== 'en' && (
+    fallback && (
       <p class="content-footer" lang={locale}>
         {ui.englishLink} ·{' '}
         <a href="/resume/" hreflang="en">
@@ -29,32 +51,28 @@ const ui = messages(locale);
     )
   }
   <div class="prose">
-    <p>
-      I'm a product-minded full-stack engineer building user-facing products
-      from zero to one and at massive scale—from an LLM-powered platform as a
-      founding engineer to LinkedIn Feed, used by tens of millions daily. My
-      work spans TypeScript and React, design systems, trust and safety,
-      accessibility, and developer experience.
-    </p>
+    <Intro />
     <p>
       <a class="quiet-link" href="https://www.linkedin.com/in/gabbywelson/"
-        ><Icon name="linkedin" /> Find me on LinkedIn <Icon name="arrow" /></a
+        ><Icon name="linkedin" /> {copy.linkedinLabel} <Icon name="arrow" /></a
       >
     </p>
   </div>
   <section class="page-section" aria-labelledby="experience">
-    <h2 id="experience">Experience</h2><WorkList detailed />
+    <h2 id="experience">{copy.experienceTitle}</h2><WorkList
+      detailed
+      entries={content.resume}
+      locale={content.locale}
+      currentLabel={copy.currentLabel}
+      presentLabel={copy.presentLabel}
+    />
   </section>
   <section class="page-section prose" aria-labelledby="earlier-experience">
-    <h2 id="earlier-experience">Before software</h2>
-    <p>
-      Before moving into tech, I worked as a business analyst at a
-      language-learning startup, a community marketer at a values-driven solar
-      company in Vermont, and an independent SAT tutor.
-    </p>
+    <h2 id="earlier-experience">{before.data.title}</h2>
+    <Before />
   </section>
   <section class="page-section" aria-labelledby="education">
-    <h2 id="education">Education & learning</h2>
+    <h2 id="education">{copy.educationTitle}</h2>
     <ul class="education-list">
       {
         education.map((entry) => (
@@ -62,10 +80,17 @@ const ui = messages(locale);
             <BrandLogo name={entry.brand} variant="list" />
             <div>
               <h3>
-                <a href={entry.href}>{entry.school}</a>
+                <a href={entry.href}>{entry.title}</a>
               </h3>
               <p>{entry.qualification}</p>
-              <p class="education-list__period">{entry.period}</p>
+              <p class="education-list__period">
+                {formatPeriod(
+                  entry.start,
+                  entry.end,
+                  content.locale,
+                  copy.presentLabel,
+                )}
+              </p>
               <p class="education-list__location">{entry.location}</p>
             </div>
           </li>
@@ -74,14 +99,16 @@ const ui = messages(locale);
     </ul>
   </section>
   <section class="page-section" aria-labelledby="skills">
-    <h2 id="skills">Skills & tools</h2>
+    <h2 id="skills">{copy.skillsTitle}</h2>
     <dl class="skills-list">
       {
         skills.map((skill) => (
           <div>
             <>
-              <dt>{skill.label}</dt>
-              <dd>{skill.items}</dd>
+              <dt>{skill.title}</dt>
+              <dd>
+                <skill.Content />
+              </dd>
             </>
           </div>
         ))

@@ -7,11 +7,15 @@
       "include": [
         "src/content/blog/[locale]/**/*.md",
         "src/content/pages/[locale]/**/*.md",
-        "src/content/notes/[locale]/**/*.md"
+        "src/content/notes/[locale]/**/*.md",
+        "src/content/resume/[locale]/**/*.md"
       ]
     },
     "json": {
       "include": ["src/i18n/messages/[locale].json"]
+    },
+    "mdx": {
+      "include": ["src/content/home/[locale]/*.mdx"]
     }
   },
   "options": {

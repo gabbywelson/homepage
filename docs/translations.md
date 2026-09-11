@@ -70,6 +70,8 @@ produce an actionable error without echoing credentials.
 - Generated translations: the same collection and relative filename under the
   target language folder. Images stay in `src/assets/`; every language has the
   same folder depth, so relative image URLs need no translation-specific rewrite.
+- Homepage: `src/content/home/en/index.mdx`; résumé: `src/content/resume/en/`.
+  See [the authoring guide](profile-content.md) for Markdown entries and MDX components.
 - Shared UI copy: `src/i18n/messages/en.json`; translated dictionaries use the GT
   language code, such as `src/i18n/messages/zh-CN.json`.
 - Run `bun run translate` after adding or changing English content. GT tracks
@@ -77,7 +79,9 @@ produce an actionable error without echoing credentials.
   explicitly synchronizes local translation corrections before new work.
 - Avoid `--force` unless intentional: it retranslates and overwrites corrections.
 - After downloading, the wrapper restores structural frontmatter from English.
-  Only `title`, `description`, and `eyebrow` come from translated frontmatter.
+  Translatable fields are declared in `src/i18n/content-fields.mjs`: writing uses
+  `title`, `description`, and `eyebrow`; homepage and résumé collections also
+  translate their page labels, role titles, qualifications, summaries, and locations.
   Publication dates, draft flags, tags, image paths, and future metadata remain
   owned by the original. It leaves the translated body intact.
 - Changes to terminology or tone do not automatically rewrite old translations;
@@ -146,18 +150,18 @@ to refresh already-cached Markdown links.
 
 This foundation covers blog posts, slash pages, garden notes, the garden landing
 page, blog lists, RSS, navigation, footer, metadata, and theme-control labels.
-The homepage and résumé now have routes in each active locale, so the wordmark,
-footer signature, author links, navigation, and homepage calls to action retain
-the reader's language. Their rich prose and work history still use the original
-English content inside `main lang="en"`, with a notice and an explicit link to the
-English original. Navigation, footer, theme controls, and the picker use the
-selected locale. These are locale-preserving routes, not completed translations:
-they canonicalize to English and do not advertise `hreflang` alternates yet.
+The homepage uses MDX, and the résumé uses Markdown entries shared with the
+homepage work list. Both have routes in each active locale. Once all content for
+a page is present, it renders in that language with its own canonical URL and
+reciprocal `hreflang` links. The homepage needs its MDX and all company summaries;
+the résumé needs all résumé entries. Missing entries retain a complete English
+fallback with `main lang="en"`, a notice, and an English canonical. Navigation,
+footer, theme controls, and the picker retain the selected locale.
 
-`HomePage.astro` and `ResumePage.astro` share the existing layouts across locales.
-When extracting their content for GT, preserve whole sentences and named inline
-links/logos. Once the prose is translated, remove the English fallback treatment
-and update the canonical and alternate-language policy for these routes.
+See [Editing the homepage and résumé](profile-content.md) for authoring examples.
+`bun run test:profile-translations` checks full and partial translations with
+reversible fixtures, including metadata restoration, shared work history, rich
+links, and no-JavaScript rendering. It never calls GT.
 
 The current local fonts cover Latin text; CJK uses system fallback fonts. Check
 real translated pages for line breaks and glyph coverage before release. The

@@ -2,19 +2,20 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseDocument } from 'yaml';
 import config from '../gt.config.json' with { type: 'json' };
+import { translatedFields } from '../src/i18n/content-fields.mjs';
 
 /** English owns publication and structural metadata; GT owns prose and copy.
  * @param {string[] | undefined} [onlyFiles] Optional scope for isolated tests.
  */
 export function normalizeTranslations(onlyFiles) {
   let count = 0;
-  for (const collection of ['blog', 'pages', 'notes']) {
+  for (const collection of ['blog', 'pages', 'notes', 'home', 'resume']) {
     const base = join('src/content', collection);
     for (const locale of config.locales) {
       const directory = join(base, locale);
       if (!existsSync(directory)) continue;
       for (const name of readdirSync(directory, { recursive: true })) {
-        if (typeof name !== 'string' || !name.endsWith('.md')) continue;
+        if (typeof name !== 'string' || !/\.mdx?$/.test(name)) continue;
         const original = join(base, config.defaultLocale, name);
         if (!existsSync(original)) continue; // Orphans are excluded by the route builder.
         const output = join(directory, name);
@@ -22,7 +23,7 @@ export function normalizeTranslations(onlyFiles) {
         const source = splitMarkdown(readFileSync(original, 'utf8'), original);
         const translated = splitMarkdown(readFileSync(output, 'utf8'), output);
         const metadata = source.metadata.clone();
-        for (const key of ['title', 'description', 'eyebrow']) {
+        for (const key of translatedFields(collection)) {
           if (!source.metadata.has(key)) continue;
           const value = translated.metadata.get(key);
           if (typeof value !== 'string' || !value.trim())

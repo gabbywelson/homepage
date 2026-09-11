@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import {
   contentIdentity,
+  localeFromPath,
   defaultLocale,
   localizedPath,
   locales,
@@ -9,6 +10,7 @@ import {
 } from './locales';
 import { hasMessages } from './messages';
 import { localizedShellPaths, resolveLocalizedLink } from './navigation';
+import { profileReady } from './profile';
 
 export type WritingCollection = 'blog' | 'pages' | 'notes';
 
@@ -87,18 +89,20 @@ export async function availablePaths(locale: Locale): Promise<Set<string>> {
 export async function languageAlternates(
   path: string,
 ): Promise<{ locale: Locale; href: string }[]> {
-  // These routes currently translate the surrounding UI, not their English prose.
-  if (localizedShellPaths.some((shell) => shell === sourcePath(path)))
+  const profile = ['/', '/resume/'].includes(sourcePath(path));
+  // Fallback pages canonicalize to English and do not claim to be translations.
+  if (profile && !(await profileReady(sourcePath(path), localeFromPath(path))))
     return [];
   const candidates = await Promise.all(
     locales.map(async (locale) => ({
       locale,
       href: localizedPath(path, locale),
       paths: await availablePaths(locale),
+      ready: !profile || (await profileReady(sourcePath(path), locale)),
     })),
   );
   return candidates
-    .filter(({ href, paths }) => paths.has(href))
+    .filter(({ href, paths, ready }) => ready && paths.has(href))
     .map(({ locale, href }) => ({ locale, href }));
 }
 
