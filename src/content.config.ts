@@ -5,8 +5,15 @@ import { glob } from 'astro/loaders';
 // Empty metadata should fail content validation instead of reaching page heads.
 const text = z.string().trim().min(1);
 
+// Preserve locale case and nested slugs; URLs normalize only the locale prefix.
+const generateId = ({ entry }: { entry: string }) => entry.replace(/\.md$/, '');
+
 const blog = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  loader: glob({
+    pattern: '*/**/*.md',
+    base: './src/content/blog',
+    generateId,
+  }),
   schema: z.object({
     title: text,
     description: text,
@@ -18,7 +25,7 @@ const blog = defineCollection({
   }),
 });
 const pages = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/pages' }),
+  loader: glob({ pattern: '*/*.md', base: './src/content/pages', generateId }),
   schema: z.object({
     title: text,
     description: text,
@@ -29,7 +36,7 @@ const pages = defineCollection({
 });
 
 const notes = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/notes' }),
+  loader: glob({ pattern: '*/*.md', base: './src/content/notes', generateId }),
   schema: z.object({
     title: text,
     description: text,

@@ -1,8 +1,23 @@
 import { satteri } from '@astrojs/markdown-satteri';
+import { localizeMarkdownLink } from '../i18n/links';
 
 /** Keep generated image candidates aligned with the prose column, not the viewport. */
 export const markdownProcessor = satteri({
   hastPlugins: [
+    {
+      name: 'localized-content-links',
+      element: {
+        filter: ['a'],
+        visit(node, context) {
+          const href = node.properties['href'];
+          if (typeof href !== 'string') return;
+          const link = localizeMarkdownLink(href, context.fileURL);
+          context.setProperty(node, 'href', link.href);
+          if (link.hreflang)
+            context.setProperty(node, 'hreflang', link.hreflang);
+        },
+      },
+    },
     {
       name: 'content-image-sizes',
       element: {

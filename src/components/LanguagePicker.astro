@@ -1,0 +1,226 @@
+---
+import Icon from './Icon.astro';
+import { availablePaths } from '../i18n/content';
+import {
+  languages,
+  locales,
+  localizedPath,
+  localeFromPath,
+} from '../i18n/locales';
+import { messages } from '../i18n/messages';
+
+const locale = localeFromPath(Astro.url.pathname);
+const ui = messages(locale);
+const choices = await Promise.all(
+  locales.map(async (candidate) => {
+    const paths = await availablePaths(candidate);
+    const samePage = localizedPath(Astro.url.pathname, candidate);
+    const browse = localizedPath('/blog/', candidate);
+    return {
+      locale: candidate,
+      ...languages[candidate],
+      href: paths.has(samePage)
+        ? samePage
+        : paths.has(browse)
+          ? browse
+          : undefined,
+      samePage: paths.has(samePage),
+    };
+  }),
+);
+---
+
+<details class="language-picker" data-language-picker>
+  <summary class="language-picker__trigger" aria-label={ui.chooseLanguage}>
+    <Icon name="globe" /><span lang={locale}
+      >{languages[locale].nativeName}</span
+    ><Icon name="chevron" class="language-picker__chevron" />
+  </summary>
+  <div class="language-picker__panel">
+    <p class="language-picker__heading">
+      {ui.chooseLanguage}<Icon name="flower" />
+    </p>
+    <p class="language-picker__note">{ui.languageNote}</p>
+    <ul class="language-picker__list">
+      {
+        choices.map((choice) => (
+          <li>
+            {choice.href ? (
+              <a
+                class="language-picker__option"
+                href={choice.href}
+                hreflang={choice.locale}
+                aria-current={choice.locale === locale ? 'true' : undefined}
+              >
+                <span class="language-picker__code" aria-hidden="true">
+                  {choice.locale.split('-')[0]?.toUpperCase()}
+                </span>
+                <span>
+                  <span lang={choice.locale}>{choice.nativeName}</span>
+                  {!choice.samePage && <small>{ui.browseTranslations}</small>}
+                </span>
+                {choice.locale === locale && (
+                  <>
+                    <Icon name="check" />
+                    <span class="sr-only">{ui.currentLanguage}</span>
+                  </>
+                )}
+              </a>
+            ) : (
+              <span class="language-picker__option language-picker__option--unavailable">
+                <span class="language-picker__code" aria-hidden="true">
+                  {choice.locale.split('-')[0]?.toUpperCase()}
+                </span>
+                <span>
+                  <span lang={choice.locale}>{choice.nativeName}</span>
+                  <small>{ui.notTranslated}</small>
+                </span>
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</details>
+
+<script>
+  const picker = document.querySelector<HTMLDetailsElement>(
+    '[data-language-picker]',
+  );
+  if (picker) {
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !picker.contains(event.target))
+        picker.open = false;
+    });
+    picker.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && picker.open) {
+        picker.open = false;
+        picker.querySelector('summary')?.focus();
+      }
+    });
+    picker.addEventListener('focusout', (event) => {
+      if (
+        event.relatedTarget instanceof Node &&
+        !picker.contains(event.relatedTarget)
+      )
+        picker.open = false;
+    });
+  }
+</script>
+
+<style>
+  .language-picker {
+    position: relative;
+    flex: none;
+    font-size: 0.8125rem;
+  }
+  .language-picker__trigger {
+    --icon-size: 18px;
+    --icon-color: var(--sage);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    color: var(--muted);
+    cursor: pointer;
+    list-style: none;
+  }
+  .language-picker__trigger::-webkit-details-marker {
+    display: none;
+  }
+  .language-picker__trigger:hover,
+  .language-picker[open] .language-picker__trigger {
+    color: var(--text);
+    background: var(--sage-soft);
+    border-color: var(--sage);
+  }
+  .language-picker__chevron {
+    --icon-size: 12px;
+  }
+  .language-picker[open] .language-picker__chevron {
+    transform: rotate(180deg);
+  }
+  .language-picker__panel {
+    position: absolute;
+    z-index: 10;
+    inset-inline-end: 0;
+    bottom: calc(100% + 12px);
+    width: min(300px, calc(100vw - 38px));
+    max-height: min(640px, 75vh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 18px 12px 10px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--bg);
+    box-shadow: 0 12px 36px #10201026;
+  }
+  .language-picker__heading {
+    --icon-size: 19px;
+    --icon-color: var(--rose);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 6px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .language-picker__note {
+    margin: 5px 6px 12px;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .language-picker__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .language-picker__option {
+    --icon-size: 16px;
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) 16px;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 7px;
+    border-radius: 10px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .language-picker__option:hover,
+  .language-picker__option[aria-current] {
+    color: var(--sage);
+    background: var(--sage-soft);
+  }
+  .language-picker__option--unavailable,
+  .language-picker__option--unavailable:hover {
+    color: var(--muted);
+    background: transparent;
+  }
+  .language-picker__code {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--sage-soft);
+    color: var(--sage);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+  }
+  .language-picker__option small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.6875rem;
+  }
+  @media (max-width: 600px) {
+    .language-picker__panel {
+      inset-inline-start: 0;
+      inset-inline-end: auto;
+    }
+  }
+</style>

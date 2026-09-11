@@ -64,9 +64,9 @@ build/check/dev processes sequentially because they share generated content cach
 | Early theme and preference handling               | `src/scripts/theme-bootstrap.js`, `src/scripts/theme.ts` |
 | Shared data contracts and icon registry           | `src/types/site.ts`, `src/lib/icons.ts`                  |
 | Header, footer, shared metadata                   | `src/layouts/BaseLayout.astro`                           |
-| Blog posts                                        | `src/content/blog/*.md`                                  |
-| Slash-page content                                | `src/content/pages/*.md`                                 |
-| Garden notes                                      | `src/content/notes/*.md`                                 |
+| Blog posts                                        | `src/content/blog/en/**/*.md`                            |
+| Slash-page content                                | `src/content/pages/en/*.md`                              |
+| Garden notes                                      | `src/content/notes/en/*.md`                              |
 | Imported photos                                   | `src/assets/garden/`                                     |
 | Old URL mappings                                  | `src/data/legacy-redirects.json`                         |
 
@@ -74,9 +74,16 @@ The homepage uses Gabby's supplied copy. Work history, accomplishments, educatio
 
 The social links were carried over from the public configuration in the old garden; review them before launch. Six blog posts, six garden notes, and the About, Now, Uses, and garden introduction have been imported. The colophon describes the current Astro site and preserves the earlier Quartz colophon as history. See [migration notes](docs/garden-migration.md) for dates, source mappings, and unavailable material.
 
+## Translations
+
+General Translation generates Markdown and shared UI dictionaries for eight target
+languages. English stays at its existing URLs; translated pages are generated only
+when their content and UI dictionary exist. See [the translation workflow](docs/translations.md)
+for API-key setup, language selection, generation, review, and current coverage.
+
 ## Writing a post
 
-Add a Markdown file to `src/content/blog/`:
+Add a Markdown file to `src/content/blog/en/`:
 
 ```yaml
 ---
@@ -98,7 +105,7 @@ Slash pages and garden notes also use Markdown. Both require `title` and `descri
 
 Maple Mono headings, DM Sans body text, Phosphor SVG icons, and a warm paper / evening garden palette. All fonts and icons are served locally; only the selected SVGs are rendered into HTML. Font licenses and the icon license are in `public/`.
 
-Pages are pre-rendered HTML, with no framework hydration or third-party requests. The theme dial is the only client interaction. It respects the system setting until a choice is made, remembers that choice when storage is available, follows changes from another tab, and skips transitions with reduced motion. With JavaScript disabled, the theme follows the system and the nonfunctional button stays hidden.
+Pages are pre-rendered HTML, with no framework hydration or third-party requests. The theme dial and progressively enhanced language picker provide client interaction. It respects the system setting until a choice is made, remembers that choice when storage is available, follows changes from another tab, and skips transitions with reduced motion. With JavaScript disabled, the theme follows the system and the nonfunctional button stays hidden.
 
 Astro's local font provider generates hashed URLs and adjusted fallback faces.
 The normal body and heading faces are preloaded; italics load on demand. Fonts

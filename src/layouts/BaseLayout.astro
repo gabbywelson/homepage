@@ -2,8 +2,26 @@
 import '../styles/global.css';
 import { Font } from 'astro:assets';
 import Icon from '../components/Icon.astro';
+import LanguagePicker from '../components/LanguagePicker.astro';
+import {
+  availablePaths,
+  availableHref,
+  languageAlternates,
+} from '../i18n/content';
+import { languages, localeFromPath, sourcePath } from '../i18n/locales';
+import { messages } from '../i18n/messages';
 import { site } from '../data/site';
 import themeBootstrap from '../scripts/theme-bootstrap.js?raw';
+
+const locale = localeFromPath(Astro.url.pathname);
+const ui = messages(locale);
+const paths = await availablePaths(locale);
+const href = (path: string) => availableHref(path, locale, paths);
+const linkLanguage = (path: string) =>
+  locale !== 'en' && href(path) === path ? 'en' : undefined;
+const alternates = await languageAlternates(Astro.url.pathname);
+const rssHref =
+  locale === 'en' ? '/rss.xml' : `/${locale.toLowerCase()}/rss.xml`;
 
 interface Props {
   title?: string | undefined;
@@ -14,14 +32,14 @@ interface Props {
 }
 const {
   title,
-  description = site.description,
+  description = ui.siteDescription,
   noindex = false,
   article = false,
   published,
 } = Astro.props;
 const pageTitle = title ? `${title} · ${site.name}` : site.title;
 const canonical = new URL(Astro.url.pathname, site.url).href;
-const path = Astro.url.pathname;
+const path = sourcePath(Astro.url.pathname);
 const active = (href: string) =>
   path.startsWith(href) ||
   (href === '/garden/' &&
@@ -29,7 +47,7 @@ const active = (href: string) =>
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,12 +64,30 @@ const active = (href: string) =>
       )
     }
     <link rel="canonical" href={canonical} />
+    {
+      alternates.length > 1 && (
+        <>
+          {alternates.map((alternate) => (
+            <link
+              rel="alternate"
+              hreflang={alternate.locale}
+              href={new URL(alternate.href, site.url).href}
+            />
+          ))}
+          <link
+            rel="alternate"
+            hreflang="x-default"
+            href={new URL(sourcePath(Astro.url.pathname), site.url).href}
+          />
+        </>
+      )
+    }
     <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={site.name} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={languages[locale].og} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
@@ -67,45 +103,63 @@ const active = (href: string) =>
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={`${site.name} — Blog`}
-      href="/rss.xml"
+      title={`${site.name} — ${ui.blog}`}
+      href={rssHref}
     />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <Font cssVariable="--font-body" preload={[{ style: 'normal' }]} />
     <Font cssVariable="--font-mono" preload />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">{ui.skipContent}</a>
     <div class="site-shell">
       <header class="site-header">
-        <a class="wordmark" href="/" aria-label="Gabby Welson — home"
+        <a
+          class="wordmark"
+          href={href('/')}
+          hreflang={linkLanguage('/')}
+          aria-label={ui.homeLabel}
           ><Icon name="plant" /><span
             >gabby<span class="wordmark-dot">.</span></span
           ></a
         >
-        <nav aria-label="Main navigation">
-          <a href="/blog/" aria-current={active('/blog/') ? 'page' : undefined}
-            >Blog</a
+        <nav aria-label={ui.mainNavigation}>
+          <a
+            href={href('/blog/')}
+            hreflang={linkLanguage('/blog/')}
+            aria-current={active('/blog/') ? 'page' : undefined}>{ui.blog}</a
           >
           <a
-            href="/resume/"
-            aria-current={active('/resume/') ? 'page' : undefined}>Résumé</a
+            href={href('/resume/')}
+            hreflang={linkLanguage('/resume/')}
+            aria-current={active('/resume/') ? 'page' : undefined}
+            >{ui.resume}{
+              linkLanguage('/resume/') && (
+                <span class="sr-only"> ({ui.englishLink})</span>
+              )
+            }</a
           >
           <a
-            href="/garden/"
+            href={href('/garden/')}
+            hreflang={linkLanguage('/garden/')}
             aria-current={active('/garden/') ? 'page' : undefined}
-            >Garden <Icon name="plant" /></a
+            >{ui.garden} <Icon name="plant" /></a
           >
         </nav>
       </header>
       <main id="main" tabindex="-1"><slot /></main>
       <footer class="site-footer">
         <div class="footer-main">
-          <a href="/" class="footer-signature h-card u-url" rel="author">
+          <a
+            href={href('/')}
+            hreflang={linkLanguage('/')}
+            class="footer-signature h-card u-url"
+            rel="author"
+          >
             <span>© {new Date().getFullYear()},</span>
-            <span class="p-name">gabby welson (she/her)</span>
+            <span class="p-name">{ui.signature}</span>
           </a>
-          <nav class="social-links" aria-label="Elsewhere and subscriptions">
+          <nav class="social-links" aria-label={ui.elsewhere}>
             {
               site.social.map((social) => (
                 <a
@@ -118,17 +172,19 @@ const active = (href: string) =>
                 </a>
               ))
             }
-            <a
-              href="/rss.xml"
-              aria-label="Subscribe via RSS"
-              title="Subscribe via RSS"><Icon name="rss" /></a
+            <a href={rssHref} aria-label={ui.subscribe} title={ui.subscribe}
+              ><Icon name="rss" /></a
             >
           </nav>
         </div>
-        <div class="footer-note">
-          <span>made with 💜 in san francisco</span><a href="/colophon/"
-            >read the colophon <Icon name="arrow" /></a
-          >
+        <div class="footer-bottom">
+          <div class="footer-note">
+            <span>{ui.madeWith}</span><a
+              href={href('/colophon/')}
+              hreflang={linkLanguage('/colophon/')}
+              >{ui.colophon} <Icon name="arrow" /></a
+            >
+          </div><LanguagePicker />
         </div>
       </footer>
     </div>
@@ -253,6 +309,15 @@ const active = (href: string) =>
     color: var(--rose);
   }
 
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
   .footer-note {
     --icon-size: 12px;
     display: flex;
@@ -295,6 +360,8 @@ const active = (href: string) =>
     }
 
     .site-header {
+      flex-wrap: wrap;
+      gap: 10px;
       padding: 19px 0 16px;
     }
 

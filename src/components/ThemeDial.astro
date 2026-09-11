@@ -1,5 +1,8 @@
 ---
 // Hidden until enhancement is ready; the page follows the system theme without JS.
+import { localeFromPath } from '../i18n/locales';
+import { messages } from '../i18n/messages';
+const ui = messages(localeFromPath(Astro.url.pathname));
 ---
 
 <div class="theme-control">
@@ -7,9 +10,11 @@
     class="theme-dial"
     data-theme-toggle
     type="button"
-    aria-label="Dark mode"
+    aria-label={ui.darkMode}
     aria-pressed="false"
-    title="Switch to dark mode"
+    title={ui.switchDark}
+    data-switch-dark={ui.switchDark}
+    data-switch-light={ui.switchLight}
     hidden
   >
     <span class="dial-case" aria-hidden="true">
@@ -51,8 +56,8 @@
     </span>
   </button>
   <span class="theme-hint" aria-hidden="true"
-    ><span class="day-hint">a little moonlight?</span><span class="night-hint"
-      >a little sunshine?</span
+    ><span class="day-hint">{ui.moonlight}</span><span class="night-hint"
+      >{ui.sunshine}</span
     ></span
   >
 </div>

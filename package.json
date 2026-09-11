@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/hosting.mjs",
+    "build": "astro sync --force && astro build && node scripts/hosting.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check": "bun run typecheck && bun run lint && bun run format:check",
@@ -19,7 +19,10 @@
     "format:check": "prettier --check .",
     "test:performance": "bun run build && node scripts/lighthouse.mjs",
     "build:production": "SITE_INDEXABLE=true bun run build",
-    "deploy": "bun run build:production && node scripts/deploy.mjs"
+    "deploy": "bun run build:production && node scripts/deploy.mjs",
+    "translate": "node --env-file-if-exists=.env.local scripts/translate.mjs",
+    "translations:check": "gt translate --dry-run",
+    "test:translations": "node scripts/test-translations.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.0",
@@ -46,12 +49,14 @@
     "eslint-plugin-astro": "^3.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "globals": "^17.12.0",
+    "gt": "2.21.1",
     "lighthouse": "^13.4.1",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.69.0",
-    "wrangler": "^4.129.0"
+    "wrangler": "^4.129.0",
+    "yaml": "2.9.0"
   },
   "packageManager": "bun@1.3.14"
 }
