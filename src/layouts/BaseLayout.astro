@@ -179,11 +179,7 @@ const active = (href: string) =>
         </div>
         <div class="footer-bottom">
           <div class="footer-note">
-            <span>{ui.madeWith}</span><a
-              href={href('/colophon/')}
-              hreflang={linkLanguage('/colophon/')}
-              >{ui.colophon} <Icon name="arrow" /></a
-            >
+            {ui.madeWith}
           </div><LanguagePicker />
         </div>
       </footer>
@@ -319,23 +315,9 @@ const active = (href: string) =>
   }
 
   .footer-note {
-    --icon-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
     margin-top: 6px;
     color: var(--muted);
     font-size: 0.6875rem;
-  }
-
-  .footer-note a {
-    color: var(--muted);
-    text-decoration: none;
-  }
-
-  .footer-note a:hover {
-    color: var(--rose);
-    text-decoration: underline;
   }
 
   .skip-link {
@@ -374,8 +356,7 @@ const active = (href: string) =>
       padding: 48px 0;
     }
 
-    .footer-main,
-    .footer-note {
+    .footer-main {
       flex-direction: column;
       align-items: flex-start;
       gap: 12px;
@@ -398,16 +379,8 @@ const active = (href: string) =>
     }
 
     .footer-note {
-      gap: 0;
       margin-top: 12px;
       font-size: 0.75rem;
-    }
-
-    .footer-note a {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      min-height: 44px;
     }
   }
 
