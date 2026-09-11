@@ -6,14 +6,35 @@ checks, builds, and deployment do not need GT credentials or generate translatio
 
 ## Languages
 
-`gt.config.json` selects Spanish (`es`), French (`fr`), German (`de`), Brazilian
-Portuguese (`pt-BR`), Italian (`it`), Simplified Chinese (`zh-CN`), Japanese (`ja`),
-and Korean (`ko`). GT does not translate every supported language by default.
+`gt.config.json` selects Spanish (`es`), French (`fr`), and Simplified Chinese
+(`zh-CN`). These are the three initial targets for a limited translation budget;
+GT does not translate every supported language by default.
 Language names and Open Graph locale tags live in `src/i18n/locales.ts`.
 
 English URLs remain unprefixed. Translations use lowercase URL prefixes, for
-example `/pt-br/blog/coming-out/`; their HTML language tag remains `pt-BR`.
+example `/zh-cn/blog/coming-out/`; their HTML language tag remains `zh-CN`.
 Slugs stay the same across languages.
+
+## Budget
+
+The intended initial budget is **$25 total**, managed in the GT dashboard. All
+English blog posts, slash pages, garden notes, and the shared UI dictionary remain
+configured for all three target languages.
+
+GT quoted $104.62 for the original eight-language request. Scaling that estimate
+to three languages gives roughly **$39.23** for the same content. This is a rough
+projection, not a new GT quote or a guarantee; three languages alone may still
+exceed the budget. Check the dashboard balance and billing settings before
+running translations, and leave auto-reload disabled if you want to avoid
+additional funding. No account billing settings are changed by this repository.
+
+`bun run translations:check` only validates file discovery; it does **not** quote
+costs or enforce a spending cap. The pinned CLI does not expose a maximum-cost
+flag, and the translation wrapper does not enforce the $25 budget. GT's current
+[usage rates](https://generaltranslation.com/en-US/pricing/usage) depend on input
+tokens and additional platform context. If the request still exceeds available
+credits, reduce the configured file scope or locales before retrying. Do not use
+auto-reload as a workaround for the budget limit.
 
 ## Credentials and the first run
 
@@ -23,8 +44,9 @@ Slugs stay the same across languages.
    `.env.local` is ignored. Do not paste keys into source, chat, screenshots, or
    `gt.config.json`, and never prefix them with `PUBLIC_`.
 4. Run `bun run translations:check` to list source files without an API request.
-5. Run `bun run translate` when ready to generate translations. This is a billable
-   GT operation across the configured locales. For a smaller pilot, temporarily
+5. Review the budget guidance above, then run `bun run translate` when ready to
+   generate translations. This is a billable GT operation across the configured
+   locales. For a smaller pilot, temporarily
    narrow the config's locales and file patterns; GT's `--locales` flag **adds**
    languages rather than restricting the configured list.
 6. Review generated files and run `bun run check` and `bun run test`. Inspect
@@ -49,7 +71,7 @@ produce an actionable error without echoing credentials.
   target language folder. Images stay in `src/assets/`; every language has the
   same folder depth, so relative image URLs need no translation-specific rewrite.
 - Shared UI copy: `src/i18n/messages/en.json`; translated dictionaries use the GT
-  language code, such as `src/i18n/messages/pt-BR.json`.
+  language code, such as `src/i18n/messages/zh-CN.json`.
 - Run `bun run translate` after adding or changing English content. GT tracks
   source changes in its lockfile and reuses translations. `options.saveLocal`
   explicitly synchronizes local translation corrections before new work.

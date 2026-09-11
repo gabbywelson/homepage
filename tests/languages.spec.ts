@@ -3,15 +3,15 @@ import AxeBuilder from '@axe-core/playwright';
 import { localizedPath, sourcePath, localeFromPath } from '../src/i18n/locales';
 
 test('locale paths preserve nested slugs, default URLs, and region tags', () => {
-  expect(localizedPath('/blog/weeknotes/week-one/', 'pt-BR')).toBe(
-    '/pt-br/blog/weeknotes/week-one/',
+  expect(localizedPath('/blog/weeknotes/week-one/', 'zh-CN')).toBe(
+    '/zh-cn/blog/weeknotes/week-one/',
   );
-  expect(sourcePath('/pt-br/blog/weeknotes/week-one/')).toBe(
+  expect(sourcePath('/zh-cn/blog/weeknotes/week-one/')).toBe(
     '/blog/weeknotes/week-one/',
   );
   expect(localeFromPath('/zh-cn/uses/')).toBe('zh-CN');
   expect(localizedPath('/fr/about/', 'en')).toBe('/about/');
-  expect(localizedPath('/fr/about/', 'ja')).toBe('/ja/about/');
+  expect(localizedPath('/fr/about/', 'es')).toBe('/es/about/');
 });
 
 for (const colorScheme of ['light', 'dark'] as const) {
@@ -27,9 +27,12 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await expect(page.locator('[data-language-picker]')).toHaveAttribute(
       'open',
     );
-    await expect(page.locator('.language-picker__list > li')).toHaveCount(9);
+    await expect(page.locator('.language-picker__list > li')).toHaveCount(4);
     await expect(page.locator('.language-picker__panel')).toContainText(
-      'Português (Brasil)',
+      'Español',
+    );
+    await expect(page.locator('.language-picker__panel')).toContainText(
+      'Français',
     );
     await expect(page.locator('.language-picker__panel')).toContainText(
       '简体中文',

@@ -4,16 +4,7 @@ export const languages = {
   en: { name: 'English', nativeName: 'English', og: 'en_US' },
   es: { name: 'Spanish', nativeName: 'Español', og: 'es_ES' },
   fr: { name: 'French', nativeName: 'Français', og: 'fr_FR' },
-  de: { name: 'German', nativeName: 'Deutsch', og: 'de_DE' },
-  'pt-BR': {
-    name: 'Brazilian Portuguese',
-    nativeName: 'Português (Brasil)',
-    og: 'pt_BR',
-  },
-  it: { name: 'Italian', nativeName: 'Italiano', og: 'it_IT' },
   'zh-CN': { name: 'Simplified Chinese', nativeName: '简体中文', og: 'zh_CN' },
-  ja: { name: 'Japanese', nativeName: '日本語', og: 'ja_JP' },
-  ko: { name: 'Korean', nativeName: '한국어', og: 'ko_KR' },
 } as const;
 
 export type Locale = keyof typeof languages;

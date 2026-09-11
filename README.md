@@ -76,10 +76,12 @@ The social links were carried over from the public configuration in the old gard
 
 ## Translations
 
-General Translation generates Markdown and shared UI dictionaries for eight target
-languages. English stays at its existing URLs; translated pages are generated only
+General Translation generates Markdown and shared UI dictionaries for Spanish,
+French, and Simplified Chinese. English stays at its existing URLs; translated pages are generated only
 when their content and UI dictionary exist. See [the translation workflow](docs/translations.md)
-for API-key setup, language selection, generation, review, and current coverage.
+for API-key setup, language selection, the $25 budget guidance, generation, review,
+and current coverage. All content remains configured; the CLI does not enforce a
+spending cap.
 
 ## Writing a post
 
