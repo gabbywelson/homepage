@@ -1,10 +1,66 @@
 ---
+import { render, type CollectionEntry } from 'astro:content';
 import BrandLogo from './BrandLogo.astro';
-import { work } from '../data/work';
+import { formatPeriod, resumeEntries } from '../i18n/profile';
+import { contentIdentity, type Locale } from '../i18n/locales';
 interface Props {
   detailed?: boolean;
+  entries: CollectionEntry<'resume'>[];
+  locale: Locale;
+  currentLabel: string;
+  presentLabel?: string;
 }
-const { detailed = false } = Astro.props;
+const {
+  detailed = false,
+  entries,
+  locale,
+  currentLabel,
+  presentLabel = currentLabel,
+} = Astro.props;
+const companies = resumeEntries(entries, 'company');
+const roles = resumeEntries(entries, 'role');
+for (const role of roles) {
+  if (
+    !companies.some(
+      (company) =>
+        contentIdentity(company.id).slug === `companies/${role.data.company}`,
+    )
+  )
+    throw new Error(`Unknown company ${role.data.company} in ${role.id}`);
+}
+const work = await Promise.all(
+  companies.map(async (company) => ({
+    ...company.data,
+    company: company.data.title,
+    period: formatPeriod(
+      company.data.start,
+      company.data.end,
+      locale,
+      currentLabel,
+      true,
+    ),
+    roles: detailed
+      ? await Promise.all(
+          roles
+            .filter(
+              (role) =>
+                contentIdentity(company.id).slug ===
+                `companies/${role.data.company}`,
+            )
+            .map(async (role) => ({
+              title: role.data.title,
+              period: formatPeriod(
+                role.data.start,
+                role.data.end,
+                locale,
+                presentLabel,
+              ),
+              ...(await render(role)),
+            })),
+        )
+      : [],
+  })),
+);
 ---
 
 <ol class:list={['work-list', { 'work-list--detailed': detailed }]}>
@@ -29,11 +85,9 @@ const { detailed = false } = Astro.props;
                 {role.period && (
                   <p class="work-list__role-period">{role.period}</p>
                 )}
-                <ul class="work-list__highlights">
-                  {role.highlights.map((highlight) => (
-                    <li>{highlight}</li>
-                  ))}
-                </ul>
+                <div class="work-list__highlights">
+                  <role.Content />
+                </div>
               </section>
             ))}
           </div>
@@ -116,18 +170,19 @@ const { detailed = false } = Astro.props;
     font-size: 0.8125rem;
   }
 
-  .work-list__highlights {
+  /* Markdown descendants are rendered outside Astro component scope. */
+  .work-list__highlights :global(ul) {
     margin: 14px 0 0;
     padding-left: 19px;
     font-size: 0.9375rem;
     line-height: 1.8;
   }
 
-  .work-list__highlights li + li {
+  .work-list__highlights :global(li + li) {
     margin-top: 11px;
   }
 
-  .work-list__highlights li::marker {
+  .work-list__highlights :global(li)::marker {
     color: var(--sage);
   }
 

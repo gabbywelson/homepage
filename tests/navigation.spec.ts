@@ -63,14 +63,17 @@ for (const [prefix, locale] of [
     await page.locator('.wordmark').click();
     await expect(page).toHaveURL(`http://127.0.0.1:4322/${prefix}/`);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
-    await expect(page.locator('main')).toHaveAttribute('lang', 'en');
+    const homeLanguage = await page.locator('main').getAttribute('lang');
+    expect(['en', locale]).toContain(homeLanguage);
     await expect(page.locator('.theme-control')).toHaveAttribute(
       'lang',
       locale,
     );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://welson.net/',
+      homeLanguage === 'en'
+        ? 'https://welson.net/'
+        : `https://welson.net/${prefix}/`,
     );
     await expect(page.locator('.home-intro__now')).toHaveAttribute(
       'href',
@@ -81,8 +84,11 @@ for (const [prefix, locale] of [
       `/${prefix}/garden/`,
     );
     await page.locator(`.site-header nav a[href="/${prefix}/resume/"]`).click();
-    await expect(page.locator('h1')).toHaveText('Résumé.');
-    await expect(page.locator('main')).toHaveAttribute('lang', 'en');
+    await expect(page.locator('h1')).not.toBeEmpty();
+    expect(['en', locale]).toContain(
+      await page.locator('main').getAttribute('lang'),
+    );
+    await expect(page.locator('.work-list__role')).toHaveCount(6);
     await expect(page.locator('.footer-signature')).toHaveAttribute(
       'href',
       `/${prefix}/`,

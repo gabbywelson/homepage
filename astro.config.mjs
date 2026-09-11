@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import mdx from '@astrojs/mdx';
 import redirects from './src/data/legacy-redirects.json';
 import { markdownProcessor } from './src/lib/markdown.ts';
 import gtConfig from './gt.config.json' with { type: 'json' };
@@ -66,6 +67,7 @@ export default defineConfig({
     breakpoints: [320, 624, 960, 1248],
   },
   integrations: [
+    mdx(),
     sitemap({
       filter: (page) =>
         !Object.keys(redirects).some(

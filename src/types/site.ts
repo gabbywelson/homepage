@@ -26,33 +26,3 @@ export interface GardenPage {
   readonly icon: IconName;
   readonly tone: 'gold' | 'sage' | 'lilac';
 }
-
-export interface WorkRole {
-  readonly title: string;
-  readonly period?: string;
-  readonly highlights: readonly string[];
-}
-
-export interface WorkExperience {
-  readonly company: string;
-  readonly summary: string;
-  readonly period?: string;
-  readonly location?: string;
-  readonly href?: ExternalUrl;
-  readonly brand: BrandName;
-  readonly roles: readonly WorkRole[];
-}
-
-export interface Education {
-  readonly school: string;
-  readonly qualification: string;
-  readonly period: string;
-  readonly location: string;
-  readonly href: ExternalUrl;
-  readonly brand: BrandName;
-}
-
-export interface SkillGroup {
-  readonly label: string;
-  readonly items: string;
-}

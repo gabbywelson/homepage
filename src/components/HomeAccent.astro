@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  icon: 'engineer' | 'coffee';
+}
+const { icon } = Astro.props;
+---
+
+<span class="home-accent">
+  {
+    icon === 'engineer' ? (
+      <span aria-hidden="true">👩🏻‍💻</span>
+    ) : (
+      <Icon name="coffee" />
+    )
+  }{' '}<slot />
+</span>
+
+<style>
+  .home-accent {
+    --icon-size: 21px;
+    --icon-color: var(--gold);
+    font-weight: 500;
+  }
+  .home-accent > span {
+    margin-right: 3px;
+    font-size: 1.1875rem;
+  }
+</style>

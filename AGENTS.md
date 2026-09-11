@@ -56,12 +56,14 @@ need performance checks. Do not add tests that merely repeat implementation.
 | `src/layouts/BaseLayout.astro`    | Document, metadata, navigation, footer, fonts and early theme bootstrap   |
 | `src/layouts/PageLayout.astro`    | Shared title, introduction, theme dial and slotted content                |
 | `src/components/`                 | Reusable Astro markup with scoped styles; no framework hydration          |
-| `src/data/`                       | Typed identity, links, résumé data and legacy redirects                   |
+| `src/data/`                       | Typed identity, links and legacy redirects                                |
 | `src/types/site.ts`               | Readonly data contracts, brand names and URL types                        |
 | `src/lib/`                        | Build-time content helpers, icon registry and Markdown image sizing       |
 | `src/scripts/`                    | Browser-only theme initialization and interaction                         |
 | `src/content.config.ts`           | Collection loaders and validated frontmatter schemas                      |
 | `src/content/{blog,pages,notes}/` | Markdown writing                                                          |
+| `src/content/home/`               | Homepage MDX prose and page labels                                        |
+| `src/content/resume/`             | Markdown roles, employer summaries, education, skills and résumé prose    |
 | `src/assets/`                     | Build-optimized images and fonts                                          |
 | `public/`                         | Pass-through files such as favicon and license notices                    |
 
@@ -70,6 +72,13 @@ a UI framework; ship browser JavaScript only for interaction that needs it.
 Shared data/types/helpers must not import `.astro` views (lint enforces this).
 Keep browser globals out of build-time helpers. Use the existing layouts for
 metadata and accessibility rather than duplicating document heads.
+
+Homepage and résumé authoring examples live in `docs/profile-content.md`. Keep
+prose in MDX/Markdown, preserve whole sentences around inline components, and
+keep layout in Astro. `src/i18n/content-fields.mjs` declares translatable metadata;
+dates, IDs, ordering and URLs remain owned by English. Run
+`bun run test:profile-translations` after changing these content boundaries or
+the profile locale fallback/alternate policy. It uses local fixtures, never GT.
 
 ## TypeScript and tooling
 

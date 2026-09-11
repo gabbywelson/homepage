@@ -397,6 +397,402 @@
         }
       },
       "fileName": "src/content/notes/en/kimchi.md"
+    },
+    {
+      "fileId": "ed392a7961da41f7f9a5e0b55d59d3e9bdca19868f95d0294ad79c39e91f3fb5",
+      "versionId": "2ddb38fd620a85fde361443694fd630bb5dd9850ed0cf9ad5c19c0dca0007fc0",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.334Z",
+          "fileName": "src/content/resume/fr/roles/handshake-senior.md",
+          "postProcessHash": "14284569d5f25395e69da67481c3327bcd338d23628c08d8e3afc8ab102898ba"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.336Z",
+          "fileName": "src/content/resume/zh-CN/roles/handshake-senior.md",
+          "postProcessHash": "edebc821be1f95e521875372e01e7bbfffc9a02e11ebe662e76b3a3bea07c1ca"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.365Z",
+          "fileName": "src/content/resume/es/roles/handshake-senior.md",
+          "postProcessHash": "f0699e64138c61030fd17acb6dc215ba249928b8b2759c2f1c6ea5eda5e197cb"
+        }
+      },
+      "fileName": "src/content/resume/en/roles/handshake-senior.md"
+    },
+    {
+      "fileId": "65b1f6588083cc0ac051ec7bef2f3470ad9de4795d43e793d38e7c618acb849f",
+      "versionId": "17a4b03151c8f3ccef6f15c3821f5796279c091968dbdfc5ceef08fa56bedf05",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.337Z",
+          "fileName": "src/content/resume/fr/roles/linkedin-senior.md",
+          "postProcessHash": "8a7ef7c736455f8623189863db804c3d270d750c06c6ca08133f28d20d231097"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.338Z",
+          "fileName": "src/content/resume/zh-CN/roles/linkedin-senior.md",
+          "postProcessHash": "bb03a3dea5ce6af5742a6e1f1fed64ed961806a0f4ceb603f25c1b621f555ccd"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.339Z",
+          "fileName": "src/content/resume/es/roles/linkedin-senior.md",
+          "postProcessHash": "bb277b668e2057d8eba3df6119fd4c0e73863da0b7aa5cf54977e1a9e03e622c"
+        }
+      },
+      "fileName": "src/content/resume/en/roles/linkedin-senior.md"
+    },
+    {
+      "fileId": "539e84280ede273b6d85e311dbb062f9db9c3c8cdba4af262ca3c1a59e9004da",
+      "versionId": "be498b8fa252a3e4af73265cb0ad487bd1e63899a1184dd50734a6975d37ad78",
+      "translations": {
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.339Z",
+          "fileName": "src/content/resume/zh-CN/before-software.md",
+          "postProcessHash": "0a12ffc984a996db59d20b8375a2ecdb821f6e712124529d1002eabaa8d3e535"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.339Z",
+          "fileName": "src/content/resume/fr/before-software.md",
+          "postProcessHash": "d7ca5b165b742d5a2de2d9b88201ea978e9d5117c901eaaccb7a1c3f96951b02"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.340Z",
+          "fileName": "src/content/resume/es/before-software.md",
+          "postProcessHash": "4d7473c34c95825ecff06cf4a2c729d19c2c8442a7702bda82ea632180b1119a"
+        }
+      },
+      "fileName": "src/content/resume/en/before-software.md"
+    },
+    {
+      "fileId": "7cb4d51353b4701be707ebc06850d2dacad71e807bbea71e4c3a256387e5ec91",
+      "versionId": "90c3ef68b999b1cd1484a64587c8bbd00190f7409d11f1916c8f83e10ba4a31e",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.342Z",
+          "fileName": "src/content/resume/fr/roles/hack-reactor-teaching.md",
+          "postProcessHash": "a43d36c53db5541cb5ce4cfb17236ed480c3faf1b439bb06f25bddaf44f12580"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.342Z",
+          "fileName": "src/content/resume/es/roles/hack-reactor-teaching.md",
+          "postProcessHash": "7fbc96aa1131c6311b8c415f5d39594bb1e39064fe396da97515fbb6ca5bbb7f"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.343Z",
+          "fileName": "src/content/resume/zh-CN/roles/hack-reactor-teaching.md",
+          "postProcessHash": "bfd67c217694a29d4999dc9c3c1cba381ec8f4f20b9fe6bb0186326af5f541a4"
+        }
+      },
+      "fileName": "src/content/resume/en/roles/hack-reactor-teaching.md"
+    },
+    {
+      "fileId": "18198f74286d00c8e95504645472baef5f79329a51b2a572f86da2cab05739d2",
+      "versionId": "c29d5af33aa5fe9b8d2c398b22a0eac7055d93147742993cac414a66f6f641a8",
+      "translations": {
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.346Z",
+          "fileName": "src/content/resume/zh-CN/roles/linkedin-apprentice.md",
+          "postProcessHash": "433ad5a722fef2df06a6f7b0bc22f76a860cd96fab8ed720100d9cc282df4363"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.346Z",
+          "fileName": "src/content/resume/es/roles/linkedin-apprentice.md",
+          "postProcessHash": "348ef05e14dd937e1c2013e89656633fdb20f24466d79c9ec7c140cc072a48cc"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.347Z",
+          "fileName": "src/content/resume/fr/roles/linkedin-apprentice.md",
+          "postProcessHash": "a3f59773f21399a0a59ad3b9b7361a65d1e853eebfac8d3a72c3770544353749"
+        }
+      },
+      "fileName": "src/content/resume/en/roles/linkedin-apprentice.md"
+    },
+    {
+      "fileId": "f217c32c97019c3af1f8944bb6cbdc48612aff07c3e4524f4dcb6c12668eead8",
+      "versionId": "29993ccfe7cb30715d70f3b84034dd25f34515244d3f190871721fd29c9e3088",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.349Z",
+          "fileName": "src/content/resume/fr/education/williams.md",
+          "postProcessHash": "72013b3285d8f5d674d3820eff116fa2ad8da9a9be95e30b8bad33d5631b5605"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.349Z",
+          "fileName": "src/content/resume/es/education/williams.md",
+          "postProcessHash": "34727c3a9740401b7b26bc39bc2994f343449e4cf2f8c78ceb66725c7d2d1750"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.350Z",
+          "fileName": "src/content/resume/zh-CN/education/williams.md",
+          "postProcessHash": "f903c5e826bf45eb78abc8298e66d42f624ff83068b8cdea43a02b306a2d5830"
+        }
+      },
+      "fileName": "src/content/resume/en/education/williams.md"
+    },
+    {
+      "fileId": "1595b8d72d92b8505ba183b8cb5c5edd013fd6171e52c18b0e6e26bf11cc6ce5",
+      "versionId": "9bc17245a74b48a131d00ea8b5ecc517773bd91b1c3e915da423b69eade79fc7",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.350Z",
+          "fileName": "src/content/resume/fr/companies/linkedin.md",
+          "postProcessHash": "81e4c353407aaa9d312373aac96eb615f41039f370346865b5e8c752b91d597f"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.350Z",
+          "fileName": "src/content/resume/es/companies/linkedin.md",
+          "postProcessHash": "4d8a05ae6f0a73f1941f1842e6d2cb8a52ec2626fb989013c12972c56dcaeda0"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.351Z",
+          "fileName": "src/content/resume/zh-CN/companies/linkedin.md",
+          "postProcessHash": "5c5dabd63d4272407997ab017ac5198c65c4c65ebf6a74b3f9b7185841bd7b57"
+        }
+      },
+      "fileName": "src/content/resume/en/companies/linkedin.md"
+    },
+    {
+      "fileId": "0dda5cc21a2f831674211f37738ea2001cd3c59d0d0c85856db0841824562744",
+      "versionId": "005a46873e71466d73eded50d8d74c35e6306d1b38432c826d1d1bfdafb0192b",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.351Z",
+          "fileName": "src/content/resume/fr/intro.md",
+          "postProcessHash": "a7bf1ce9967ca967a2953e2bb61cd52daee23a09f1ff3adb56dca6c6ad823fad"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.352Z",
+          "fileName": "src/content/resume/es/intro.md",
+          "postProcessHash": "e4f392cd3801e89dc1e6b50bc94412bc5d59393f59895b10ee983da02e083476"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.352Z",
+          "fileName": "src/content/resume/zh-CN/intro.md",
+          "postProcessHash": "41dad0e93a47d6e9f77058c9001a4c9dd77da08bdaa5893fc941c634b7f365c4"
+        }
+      },
+      "fileName": "src/content/resume/en/intro.md"
+    },
+    {
+      "fileId": "0229fc1673efef6dffecdfe39b77811a9d46a9b706dfcc4edb99a361d0f8e3e1",
+      "versionId": "e16e34f3f4c2779980482740d223c82d636bf0b68bed8c726782ec09a5ccb7d5",
+      "translations": {
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.353Z",
+          "fileName": "src/content/resume/zh-CN/skills/ai-development.md",
+          "postProcessHash": "e2a08cc803c3bfc4edabfd865fa931e984ccae463162c534dbdfd8b6c1fd2b5f"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.353Z",
+          "fileName": "src/content/resume/fr/skills/ai-development.md",
+          "postProcessHash": "1b0ef45866eb40441eeba81b1584197f73b8246ca16947585d7e6af96653a29d"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.355Z",
+          "fileName": "src/content/resume/es/skills/ai-development.md",
+          "postProcessHash": "eda3fb9a5a33fdf089fc7ea257b6706689d0a43bf1bcebf691d6cba6e33a3981"
+        }
+      },
+      "fileName": "src/content/resume/en/skills/ai-development.md"
+    },
+    {
+      "fileId": "cfc5a6c277fce317134465e3cc6b6cc18bbd67b7e0a54cd38df147e14f8d41aa",
+      "versionId": "a10b144c6de00cb6eb73d7bb4e01051796e662afd8104e9db1ed1a8c8554ab2c",
+      "translations": {
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.355Z",
+          "fileName": "src/content/resume/es/roles/handshake-founding.md",
+          "postProcessHash": "260ba994f4f9c14eace6f5f37e8b8f28c3382736cc00d89aceadc729695bfde0"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.365Z",
+          "fileName": "src/content/resume/zh-CN/roles/handshake-founding.md",
+          "postProcessHash": "3f0905579103289a395d1be808806afc211e730f27ab01ca7d8ce903acf3faee"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.366Z",
+          "fileName": "src/content/resume/fr/roles/handshake-founding.md",
+          "postProcessHash": "3511f59da7a45d60af2fe623d4a738d554f393b030d41d36c8463f5a9d2ec975"
+        }
+      },
+      "fileName": "src/content/resume/en/roles/handshake-founding.md"
+    },
+    {
+      "fileId": "cc096c1debf7e42c9509185d6e815b690278c9c0fea7085de33df1367fb03c50",
+      "versionId": "68dab63a8c698cefa2ad5d60a64561e56a206768a9394c5152016201d7f7cbc9",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.357Z",
+          "fileName": "src/content/resume/fr/roles/linkedin-engineer.md",
+          "postProcessHash": "97207b6657b0b5992aaec960a6e189a0cfefc6551683bb4375b286dff15c40b8"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.366Z",
+          "fileName": "src/content/resume/es/roles/linkedin-engineer.md",
+          "postProcessHash": "9dd7181940ff58f53f9acc171c4fcf866b33c75940d39ea31c2b9be1e8a3c536"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.367Z",
+          "fileName": "src/content/resume/zh-CN/roles/linkedin-engineer.md",
+          "postProcessHash": "a10c0b02c775a9f6b66c7d406bdb53eaf1fcf3d74232e66e72ca9db42675cbeb"
+        }
+      },
+      "fileName": "src/content/resume/en/roles/linkedin-engineer.md"
+    },
+    {
+      "fileId": "2cf7285ac09652bd60ffde03f74ffd309d064a8f40e4b8294384c0a50f083989",
+      "versionId": "872ecd53bde9c955c971a435f44808f2b8ee9cc591c24cc752b740a0907c11cc",
+      "translations": {
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.358Z",
+          "fileName": "src/content/resume/zh-CN/companies/hack-reactor.md",
+          "postProcessHash": "9b3afb084dc125b578dcf967454b3e32f4d175ab16e4e87fba05f3c8afa46e56"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.359Z",
+          "fileName": "src/content/resume/fr/companies/hack-reactor.md",
+          "postProcessHash": "e6305d888077d28ddbbdb6b3d4f8ead17e06a29b062656507158f0d231a050ac"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.359Z",
+          "fileName": "src/content/resume/es/companies/hack-reactor.md",
+          "postProcessHash": "166eea564df2324045d8dc62414f9eaaa2c4edfbb4335969e51f8626eabcfa8c"
+        }
+      },
+      "fileName": "src/content/resume/en/companies/hack-reactor.md"
+    },
+    {
+      "fileId": "b6ddef3eeabaf2ecb076cc9ee9e93d0647ff08061cbbeaa0d076d4391636d85e",
+      "versionId": "2d8b9146b6d262af44d599dc86fe52f3ad6dac960fb5794e292655dacc2976f9",
+      "translations": {
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.360Z",
+          "fileName": "src/content/resume/es/education/hack-reactor.md",
+          "postProcessHash": "5264addf59912fe4df832205f95836dac93a57e0d461c3c8f7dadead4c7dd6a6"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.361Z",
+          "fileName": "src/content/resume/zh-CN/education/hack-reactor.md",
+          "postProcessHash": "43168f5bc7e70c058bf39e28abf54b09f2c12a78508bf0149f5be5e492ea71bd"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.361Z",
+          "fileName": "src/content/resume/fr/education/hack-reactor.md",
+          "postProcessHash": "64b93d77d585106302751a473107317492d6c384f10cf1fee361958e18f49d3b"
+        }
+      },
+      "fileName": "src/content/resume/en/education/hack-reactor.md"
+    },
+    {
+      "fileId": "61fa0ff75e0c388d951a464cd6e76b7e577487c914fd71b132013a68f3711c2a",
+      "versionId": "308ff0194c008a51496a3baa5530f8c959c9fabfa11d0a63ecde5a84f610e589",
+      "translations": {
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.361Z",
+          "fileName": "src/content/resume/es/skills/technologies.md",
+          "postProcessHash": "990b26b9decb5d0b3501896a26ba9ba59233f4b1cad94cd2fb34e8b310b13798"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.361Z",
+          "fileName": "src/content/resume/zh-CN/skills/technologies.md",
+          "postProcessHash": "147f41c377b8db1d9ef4fc7d33ef2063812c168e41009796db2b5a143fdef4cd"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.362Z",
+          "fileName": "src/content/resume/fr/skills/technologies.md",
+          "postProcessHash": "19f2fc464dfb69e7d08891791618654a63882589aa7efeed04c1413169af6655"
+        }
+      },
+      "fileName": "src/content/resume/en/skills/technologies.md"
+    },
+    {
+      "fileId": "4169e8dc112fdcea40171f82e4691439dbd84cc960aeaf5fcddf5149e736fc3c",
+      "versionId": "ba145554f4aa61dcc00235e90f37350e26a599a52b0b34c9d4ee692b3dce07db",
+      "translations": {
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.362Z",
+          "fileName": "src/content/resume/es/companies/handshake.md",
+          "postProcessHash": "70a3ff424be871323deb134d289362af3a5800eb11929191bb1c6828f94ec96c"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.363Z",
+          "fileName": "src/content/resume/fr/companies/handshake.md",
+          "postProcessHash": "6487d8606e4729c823edbc658a34c6ec3495c3d26d607938cbf1e89539308177"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.363Z",
+          "fileName": "src/content/resume/zh-CN/companies/handshake.md",
+          "postProcessHash": "6b9b5683ebeffe782b133da97214b1a28a2ccca69c12ed4fcd65105e49776efd"
+        }
+      },
+      "fileName": "src/content/resume/en/companies/handshake.md"
+    },
+    {
+      "fileId": "78ba7418d65fe4cff202380674ee89750c5f2a293ed6cb348741fea711126ba7",
+      "versionId": "556016608dd31ec07a44b703c5b206ed860a791b87143659fafaa54cf4c28fca",
+      "translations": {
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.363Z",
+          "fileName": "src/content/resume/es/skills/languages.md",
+          "postProcessHash": "458797f1b988b644f0382ad6eb7937021dd964f65383009fe2f3bc033ad6aa0b"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.364Z",
+          "fileName": "src/content/resume/fr/skills/languages.md",
+          "postProcessHash": "b9bb0c92ab01c50581d4819e03f785d7f2419f536dac177ee57b0a9cd25e8e96"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.364Z",
+          "fileName": "src/content/resume/zh-CN/skills/languages.md",
+          "postProcessHash": "0a2205942600e914d8d46ce4f7961d9650e5c774bd7df6eabd87083ea9867e01"
+        }
+      },
+      "fileName": "src/content/resume/en/skills/languages.md"
+    },
+    {
+      "fileId": "54aac676eece1cc487a52c2ba7419f77e6c5eb6d46413dbb5d77e86d5447f72f",
+      "versionId": "7d235ce0e305915920a9930e0a03855e65dabace3ae8bc28e548c654dc841fdc",
+      "translations": {
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.364Z",
+          "fileName": "src/content/resume/fr/education/exeter.md",
+          "postProcessHash": "66cfea3932459539e6b0513afb79dd068acd238f7a5b6a8044f1eb5270c4b634"
+        },
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.364Z",
+          "fileName": "src/content/resume/es/education/exeter.md",
+          "postProcessHash": "6f83edc4d1787aa966272d7ee34c2f238493aec1609a111516b80d3dc746ca33"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.365Z",
+          "fileName": "src/content/resume/zh-CN/education/exeter.md",
+          "postProcessHash": "c00fe04da1cf346bfb1f8bbe073bee0bf4fb57f7aab4e5505f9c4b4a260e86a6"
+        }
+      },
+      "fileName": "src/content/resume/en/education/exeter.md"
+    },
+    {
+      "fileId": "d7a7dc0794af4479bc1b8ebdf2a79134d5d4b045c0b62aed0c230061ddc91ae6",
+      "versionId": "da310ec7a2319733d1d8f424aa158c079152c1e0f6f8668bf6ebabaa6a1b334e",
+      "translations": {
+        "es": {
+          "updatedAt": "2026-09-11T22:20:10.367Z",
+          "fileName": "src/content/home/es/index.mdx",
+          "postProcessHash": "bb041f5c9de0fc08d4ae7b53f294568a3ad28a24763a5034a30dc5a721606a78"
+        },
+        "fr": {
+          "updatedAt": "2026-09-11T22:20:10.367Z",
+          "fileName": "src/content/home/fr/index.mdx",
+          "postProcessHash": "c0789d5439032dd8a953caa7facec59bb553626582f5769376eaf67979b0ec6d"
+        },
+        "zh-CN": {
+          "updatedAt": "2026-09-11T22:20:10.368Z",
+          "fileName": "src/content/home/zh-CN/index.mdx",
+          "postProcessHash": "28b95861f69793a214d2c64b91417fd9273d8c0be76152674dc958c12107896c"
+        }
+      },
+      "fileName": "src/content/home/en/index.mdx"
     }
   ]
 }
