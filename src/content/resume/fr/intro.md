@@ -2,7 +2,8 @@
 kind: "intro"
 title: "Résumé"
 eyebrow: "Quelques chapitres"
-description: "Les projets sur lesquels j'ai travaillé, les personnes qui m'ont tout appris, et quelques étapes en chemin."
+description: "Les projets sur lesquels j'ai travaillé, les personnes qui m'ont
+  tout appris, et quelques étapes en chemin."
 experienceTitle: "Expérience"
 educationTitle: "Formation et apprentissages"
 skillsTitle: "Compétences et outils"

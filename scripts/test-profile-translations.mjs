@@ -47,7 +47,8 @@ try {
       if (typeof name !== 'string' || !/\.mdx?$/.test(name)) continue;
       fixture(
         `src/content/${collection}/fr/${name}`,
-        readFileSync(join(source, name), 'utf8'),
+        // Match real GT downloads: metadata-only entries can end at the fence.
+        readFileSync(join(source, name), 'utf8').trimEnd(),
       );
     }
   }

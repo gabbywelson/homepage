@@ -44,8 +44,9 @@ export function normalizeTranslations(onlyFiles) {
 
 /** @param {string} content @param {string} path */
 function splitMarkdown(content, path) {
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---(\r?\n[\s\S]*)$/);
-  if (!match?.[1] || !match[2])
+  // GT may end metadata-only entries at the closing fence, without a newline.
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---(\r?\n[\s\S]*|)$/);
+  if (!match?.[1] || match[2] === undefined)
     throw new Error(`${path}: missing YAML frontmatter`);
   const metadata = parseDocument(match[1]);
   if (metadata.errors.length)
