@@ -2,10 +2,11 @@
 // Hidden until enhancement is ready; the page follows the system theme without JS.
 import { localeFromPath } from '../i18n/locales';
 import { messages } from '../i18n/messages';
-const ui = messages(localeFromPath(Astro.url.pathname));
+const locale = localeFromPath(Astro.url.pathname);
+const ui = messages(locale);
 ---
 
-<div class="theme-control">
+<div class="theme-control" lang={locale}>
   <button
     class="theme-dial"
     data-theme-toggle

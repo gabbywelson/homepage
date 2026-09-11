@@ -107,8 +107,32 @@ draft and publication status. It fails on inconsistent structural metadata.
 Localized pages have their own canonical URLs and reciprocal `hreflang` links
 only for real equivalents. Each active language has a separate RSS feed.
 
-Markdown links are localized at build time only when their translated destination
-exists and the source is published. Other links retain the English destination.
+Internal navigation uses `availableLink(path, locale, paths)` from
+`src/i18n/content.ts`; spread its result onto an anchor to set both `href` and
+`hreflang`. `availableHref` is the URL-only convenience wrapper. Both call
+`resolveLocalizedLink` in `src/i18n/navigation.ts`, which is also used by the
+Markdown compiler. Use this shared policy for new internal links rather than
+hard-coding an English destination or prepending locale strings in a component.
+
+```astro
+---
+const locale = localeFromPath(Astro.url.pathname);
+const paths = await availablePaths(locale);
+const link = (path: string) => availableLink(path, locale, paths);
+---
+
+<a {...link('/')}>Home</a>
+```
+
+The policy handles root-relative and production same-origin absolute URLs,
+preserves query strings, resolves legacy redirects, and avoids double locale
+prefixes. External URLs, assets, endpoints, relative URLs, and in-page anchors are
+left alone. Use root-relative paths for internal navigation. Language-picker links
+and explicit English-original links bypass this policy intentionally.
+
+Markdown links are localized at build time only when their destination route
+exists and the source is published. Missing translated writing retains its
+English destination.
 Cross-page fragments deliberately remain on English because translated headings
 may generate different IDs; in-page footnotes retain their existing identifiers.
 No experimental GT URL/asset rewriting flags are enabled.
@@ -122,10 +146,18 @@ to refresh already-cached Markdown links.
 
 This foundation covers blog posts, slash pages, garden notes, the garden landing
 page, blog lists, RSS, navigation, footer, metadata, and theme-control labels.
-The homepage's rich paragraphs and detailed résumé still use their original
-English Astro/TypeScript content. They intentionally do not produce translated
-routes. Their extraction should preserve whole sentences and named inline
-links/logos, rather than translate disconnected fragments or arbitrary markup.
+The homepage and résumé now have routes in each active locale, so the wordmark,
+footer signature, author links, navigation, and homepage calls to action retain
+the reader's language. Their rich prose and work history still use the original
+English content inside `main lang="en"`, with a notice and an explicit link to the
+English original. Navigation, footer, theme controls, and the picker use the
+selected locale. These are locale-preserving routes, not completed translations:
+they canonicalize to English and do not advertise `hreflang` alternates yet.
+
+`HomePage.astro` and `ResumePage.astro` share the existing layouts across locales.
+When extracting their content for GT, preserve whole sentences and named inline
+links/logos. Once the prose is translated, remove the English fallback treatment
+and update the canonical and alternate-language policy for these routes.
 
 The current local fonts cover Latin text; CJK uses system fallback fonts. Check
 real translated pages for line breaks and glyph coverage before release. The

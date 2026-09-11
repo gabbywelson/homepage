@@ -8,7 +8,7 @@ import { formatDate } from '../../lib/posts';
 import { site } from '../../data/site';
 import { localeFromPath, sourcePath } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
-import { contentPath, availableHref, availablePaths } from '../../i18n/content';
+import { contentPath, availableLink, availablePaths } from '../../i18n/content';
 interface Props {
   post: CollectionEntry<'blog'>;
 }
@@ -16,6 +16,7 @@ const { post } = Astro.props;
 const locale = localeFromPath(Astro.url.pathname);
 const ui = messages(locale);
 const paths = await availablePaths(locale);
+const link = (path: string) => availableLink(path, locale, paths);
 const { Content } = await render(post);
 ---
 
@@ -26,9 +27,7 @@ const { Content } = await render(post);
   published={post.data.pubDate}
 >
   <div class="post__tools">
-    <a
-      class="quiet-link post__back"
-      href={availableHref('/blog/', locale, paths)}
+    <a class="quiet-link post__back" {...link('/blog/')}
       ><Icon name="right" /> {ui.backBlog}</a
     ><ThemeDial />
   </div>
@@ -37,7 +36,7 @@ const { Content } = await render(post);
       <div class="post__meta">
         <time class="dt-published" datetime={post.data.pubDate.toISOString()}
           >{formatDate(post.data.pubDate, locale)}</time
-        ><a class="p-author h-card" href="/">{site.name}</a>
+        ><a class="p-author h-card" {...link('/')}>{site.name}</a>
       </div>
       <h1 class="p-name">
         {post.data.title}<span class="heading-dot">.</span>

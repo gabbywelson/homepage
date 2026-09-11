@@ -4,6 +4,8 @@ import BlogIndex from '../../components/pages/BlogIndex.astro';
 import BlogPost from '../../components/pages/BlogPost.astro';
 import GardenIndex from '../../components/pages/GardenIndex.astro';
 import WritingPage from '../../components/pages/WritingPage.astro';
+import HomePage from '../../components/pages/HomePage.astro';
+import ResumePage from '../../components/pages/ResumePage.astro';
 import { availablePaths, localizedEntries } from '../../i18n/content';
 import { locales, contentIdentity } from '../../i18n/locales';
 
@@ -38,6 +40,14 @@ export async function getStaticPaths() {
               params: { locale: locale.toLowerCase(), path: 'blog' },
               props: {},
             },
+            {
+              params: { locale: locale.toLowerCase(), path: undefined },
+              props: { shell: 'home' },
+            },
+            {
+              params: { locale: locale.toLowerCase(), path: 'resume' },
+              props: { shell: 'resume' },
+            },
           ];
         }),
     )
@@ -45,16 +55,21 @@ export async function getStaticPaths() {
 }
 
 interface Props {
+  shell?: 'home' | 'resume';
   entry?:
     | CollectionEntry<'blog'>
     | CollectionEntry<'pages'>
     | CollectionEntry<'notes'>;
 }
-const { entry } = Astro.props;
+const { entry, shell } = Astro.props;
 ---
 
 {
-  !entry ? (
+  shell === 'home' ? (
+    <HomePage />
+  ) : shell === 'resume' ? (
+    <ResumePage />
+  ) : !entry ? (
     <BlogIndex />
   ) : entry.collection === 'blog' ? (
     <BlogPost post={entry} />

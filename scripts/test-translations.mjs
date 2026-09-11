@@ -37,7 +37,11 @@ try {
   const metadata =
     'description: Translation test\npubDate: 2020-01-01\npriorityImage: ../../../assets/garden/desk.jpeg';
   const body =
-    '\n\n[Translated page](/translation-fixture/) and [English résumé](/resume/).\n\n![A desk](../../../assets/garden/desk.jpeg)\n\nA footnote[^1].\n\n[^1]: Preserved reference.\n';
+    '\n\n[Translated page](/translation-fixture/) and [Résumé](/resume/) and [English only](/translation-english-fixture/).\n\n![A desk](../../../assets/garden/desk.jpeg)\n\nA footnote[^1].\n\n[^1]: Preserved reference.\n';
+  fixture(
+    'src/content/pages/en/translation-english-fixture.md',
+    '---\ntitle: English only\ndescription: No translation yet\n---\n\nEnglish writing.\n',
+  );
   for (const locale of ['en', 'fr']) {
     fixture(
       `src/content/blog/${locale}/translation-fixture.md`,

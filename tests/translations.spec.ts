@@ -33,11 +33,14 @@ test('translated writing renders statically with correct links, images, metadata
     page.locator('.prose a').filter({ hasText: 'Translated page' }),
   ).toHaveAttribute('href', '/fr/translation-fixture/');
   await expect(
-    page.locator('.prose a').filter({ hasText: 'English résumé' }),
-  ).toHaveAttribute('href', '/resume/');
+    page.locator('.prose a').filter({ hasText: 'Résumé' }),
+  ).toHaveAttribute('href', '/fr/resume/');
   await expect(
-    page.locator('.prose a').filter({ hasText: 'English résumé' }),
+    page.locator('.prose a').filter({ hasText: 'English only' }),
   ).toHaveAttribute('hreflang', 'en');
+  await expect(
+    page.locator('.prose a').filter({ hasText: 'English only' }),
+  ).toHaveAttribute('href', '/translation-english-fixture/');
   await expect(page.locator('.prose img')).toHaveAttribute('loading', 'eager');
   await expect(page.locator('.prose img')).toHaveAttribute(
     'fetchpriority',

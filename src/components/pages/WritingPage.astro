@@ -5,7 +5,7 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import { formatDate } from '../../lib/posts';
 import { localeFromPath, sourcePath } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
-import { availableHref, availablePaths } from '../../i18n/content';
+import { availableLink, availablePaths } from '../../i18n/content';
 
 interface Props {
   entry: CollectionEntry<'pages'> | CollectionEntry<'notes'>;
@@ -50,7 +50,7 @@ const { Content } = await render(entry);
   }
   <div class="prose"><Content /></div>
   <p class="content-footer">
-    <a class="quiet-link" href={availableHref('/garden/', locale, paths)}
+    <a class="quiet-link" {...availableLink('/garden/', locale, paths)}
       >← {ui.backGarden}</a
     >
   </p>

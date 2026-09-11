@@ -5,7 +5,7 @@ import Icon from '../components/Icon.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
 import {
   availablePaths,
-  availableHref,
+  availableLink,
   languageAlternates,
 } from '../i18n/content';
 import { languages, localeFromPath, sourcePath } from '../i18n/locales';
@@ -16,9 +16,7 @@ import themeBootstrap from '../scripts/theme-bootstrap.js?raw';
 const locale = localeFromPath(Astro.url.pathname);
 const ui = messages(locale);
 const paths = await availablePaths(locale);
-const href = (path: string) => availableHref(path, locale, paths);
-const linkLanguage = (path: string) =>
-  locale !== 'en' && href(path) === path ? 'en' : undefined;
+const link = (path: string) => availableLink(path, locale, paths);
 const alternates = await languageAlternates(Astro.url.pathname);
 const rssHref =
   locale === 'en' ? '/rss.xml' : `/${locale.toLowerCase()}/rss.xml`;
@@ -29,6 +27,8 @@ interface Props {
   noindex?: boolean | undefined;
   article?: boolean | undefined;
   published?: Date | undefined;
+  contentLanguage?: string | undefined;
+  canonicalPath?: string | undefined;
 }
 const {
   title,
@@ -36,9 +36,11 @@ const {
   noindex = false,
   article = false,
   published,
+  contentLanguage,
+  canonicalPath = Astro.url.pathname,
 } = Astro.props;
 const pageTitle = title ? `${title} · ${site.name}` : site.title;
-const canonical = new URL(Astro.url.pathname, site.url).href;
+const canonical = new URL(canonicalPath, site.url).href;
 const path = sourcePath(Astro.url.pathname);
 const active = (href: string) =>
   path.startsWith(href) ||
@@ -114,48 +116,36 @@ const active = (href: string) =>
     <a class="skip-link" href="#main">{ui.skipContent}</a>
     <div class="site-shell">
       <header class="site-header">
-        <a
-          class="wordmark"
-          href={href('/')}
-          hreflang={linkLanguage('/')}
-          aria-label={ui.homeLabel}
+        <a class="wordmark" {...link('/')} aria-label={ui.homeLabel}
           ><Icon name="plant" /><span
             >gabby<span class="wordmark-dot">.</span></span
           ></a
         >
         <nav aria-label={ui.mainNavigation}>
           <a
-            href={href('/blog/')}
-            hreflang={linkLanguage('/blog/')}
+            {...link('/blog/')}
             aria-current={active('/blog/') ? 'page' : undefined}>{ui.blog}</a
           >
           <a
-            href={href('/resume/')}
-            hreflang={linkLanguage('/resume/')}
+            {...link('/resume/')}
             aria-current={active('/resume/') ? 'page' : undefined}
             >{ui.resume}{
-              linkLanguage('/resume/') && (
+              locale !== 'en' && link('/resume/').hreflang === 'en' && (
                 <span class="sr-only"> ({ui.englishLink})</span>
               )
             }</a
           >
           <a
-            href={href('/garden/')}
-            hreflang={linkLanguage('/garden/')}
+            {...link('/garden/')}
             aria-current={active('/garden/') ? 'page' : undefined}
             >{ui.garden} <Icon name="plant" /></a
           >
         </nav>
       </header>
-      <main id="main" tabindex="-1"><slot /></main>
+      <main id="main" tabindex="-1" lang={contentLanguage}><slot /></main>
       <footer class="site-footer">
         <div class="footer-main">
-          <a
-            href={href('/')}
-            hreflang={linkLanguage('/')}
-            class="footer-signature h-card u-url"
-            rel="author"
-          >
+          <a {...link('/')} class="footer-signature h-card u-url" rel="author">
             <span>© {new Date().getFullYear()},</span>
             <span class="p-name">{ui.signature}</span>
           </a>

@@ -2,8 +2,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, relative } from 'node:path';
 import { parse } from 'yaml';
-import redirects from '../data/legacy-redirects.json';
-import { isLocale, localizedPath, type Locale } from './locales';
+import { isLocale, localeFromPath, sourcePath, type Locale } from './locales';
+import { localizedShellPaths, resolveLocalizedLink } from './navigation';
 
 const contentRoot = fileURLToPath(new URL('../content/', import.meta.url));
 const messagesRoot = fileURLToPath(new URL('./messages/', import.meta.url));
@@ -41,30 +41,17 @@ function hasWriting(locale: Locale): boolean {
   });
 }
 
-/** Only rewrite known published content routes; assets, external URLs and
- * cross-page fragments retain their original destinations. */
-export function localizeMarkdownLink(
-  href: string,
-  fileURL: URL | undefined,
-): { href: string; hreflang?: string } {
-  if (!fileURL || !href.startsWith('/') || href.startsWith('//'))
-    return { href };
-  const [, candidate] = relative(contentRoot, fileURLToPath(fileURL)).split(
-    '/',
-  );
-  if (!candidate || !isLocale(candidate) || candidate === 'en') return { href };
-  const locale = candidate;
-  const url = new URL(href, 'https://welson.net');
-  if (url.hash) return { href, hreflang: 'en' };
-  const redirectKey = url.pathname.replace(/\/$/, '');
-  const redirect: unknown = Reflect.get(redirects, redirectKey);
-  if (typeof redirect === 'string') url.pathname = redirect;
-  const path = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
-  if (!existsSync(join(messagesRoot, `${locale}.json`)))
-    return { href, hreflang: 'en' };
-  if (path === '/blog/' && hasWriting(locale))
-    return { href: localizedPath(path, locale) + url.search, hreflang: locale };
-  const parts = path.split('/').filter(Boolean);
+/** A filesystem route check for the content compilation phase. */
+function hasContentPath(path: string): boolean {
+  const locale = localeFromPath(path);
+  if (!existsSync(join(messagesRoot, `${locale}.json`))) return false;
+  const source = sourcePath(path);
+  if (
+    localizedShellPaths.some((shell) => shell === source) ||
+    source === '/blog/'
+  )
+    return locale === 'en' || hasWriting(locale);
+  const parts = source.split('/').filter(Boolean);
   const collection =
     parts[0] === 'blog'
       ? 'blog'
@@ -73,12 +60,23 @@ export function localizeMarkdownLink(
         : 'pages';
   const slug =
     collection === 'pages' ? parts.join('/') : parts.slice(1).join('/');
-  if (
+  return Boolean(
     slug &&
     existsSync(join(contentRoot, collection, locale, `${slug}.md`)) &&
-    published(join(contentRoot, collection, 'en', `${slug}.md`))
-  ) {
-    return { href: localizedPath(path, locale) + url.search, hreflang: locale };
-  }
-  return { href, hreflang: 'en' };
+    published(join(contentRoot, collection, 'en', `${slug}.md`)),
+  );
+}
+
+/** Use the same link policy as Astro navigation, without importing the content
+ * store while the Markdown compiler is still populating that store. */
+export function localizeMarkdownLink(
+  href: string,
+  fileURL: URL | undefined,
+): { href: string; hreflang?: string } {
+  if (!fileURL) return { href };
+  const [, candidate] = relative(contentRoot, fileURLToPath(fileURL)).split(
+    '/',
+  );
+  if (!candidate || !isLocale(candidate)) return { href };
+  return resolveLocalizedLink(href, candidate, hasContentPath);
 }

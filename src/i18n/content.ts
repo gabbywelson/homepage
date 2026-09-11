@@ -4,9 +4,11 @@ import {
   defaultLocale,
   localizedPath,
   locales,
+  sourcePath,
   type Locale,
 } from './locales';
 import { hasMessages } from './messages';
+import { localizedShellPaths, resolveLocalizedLink } from './navigation';
 
 export type WritingCollection = 'blog' | 'pages' | 'notes';
 
@@ -72,7 +74,11 @@ export async function availablePaths(locale: Locale): Promise<Set<string>> {
   );
   const paths = new Set(entries.flat());
   // A locale can browse its translated writing even when only one note is ready.
-  if (paths.size) paths.add(localizedPath('/blog/', locale));
+  if (paths.size) {
+    paths.add(localizedPath('/blog/', locale));
+    for (const path of localizedShellPaths)
+      paths.add(localizedPath(path, locale));
+  }
   if (locale === defaultLocale)
     for (const path of ['/', '/resume/', '/blog/', '/404/']) paths.add(path);
   return paths;
@@ -81,6 +87,9 @@ export async function availablePaths(locale: Locale): Promise<Set<string>> {
 export async function languageAlternates(
   path: string,
 ): Promise<{ locale: Locale; href: string }[]> {
+  // These routes currently translate the surrounding UI, not their English prose.
+  if (localizedShellPaths.some((shell) => shell === sourcePath(path)))
+    return [];
   const candidates = await Promise.all(
     locales.map(async (locale) => ({
       locale,
@@ -98,6 +107,13 @@ export function availableHref(
   locale: Locale,
   paths: Set<string>,
 ): string {
-  const localized = localizedPath(path, locale);
-  return paths.has(localized) ? localized : localizedPath(path, defaultLocale);
+  return availableLink(path, locale, paths).href;
+}
+
+export function availableLink(
+  path: string,
+  locale: Locale,
+  paths: Set<string>,
+) {
+  return resolveLocalizedLink(path, locale, (target) => paths.has(target));
 }
