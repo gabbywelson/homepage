@@ -1,10 +1,25 @@
 import config from '../../gt.config.json' with { type: 'json' };
 
 export const languages = {
-  en: { name: 'English', nativeName: 'English', og: 'en_US' },
-  es: { name: 'Spanish', nativeName: 'Español', og: 'es_ES' },
-  fr: { name: 'French', nativeName: 'Français', og: 'fr_FR' },
-  'zh-CN': { name: 'Simplified Chinese', nativeName: '简体中文', og: 'zh_CN' },
+  en: {
+    name: 'English',
+    nativeName: 'English',
+    greeting: 'Hello',
+    og: 'en_US',
+  },
+  es: { name: 'Spanish', nativeName: 'Español', greeting: 'Hola', og: 'es_ES' },
+  fr: {
+    name: 'French',
+    nativeName: 'Français',
+    greeting: 'Bonjour',
+    og: 'fr_FR',
+  },
+  'zh-CN': {
+    name: 'Simplified Chinese',
+    nativeName: '简体中文',
+    greeting: '你好',
+    og: 'zh_CN',
+  },
 } as const;
 
 export type Locale = keyof typeof languages;

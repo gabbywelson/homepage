@@ -30,13 +30,45 @@ const choices = await Promise.all(
 );
 ---
 
-<details class="language-picker" data-language-picker>
+<details class="language-picker" data-language-picker data-preview={locale}>
   <summary class="language-picker__trigger" aria-label={ui.chooseLanguage}>
     <Icon name="globe" /><span lang={locale}
       >{languages[locale].nativeName}</span
     ><Icon name="chevron" class="language-picker__chevron" />
   </summary>
   <div class="language-picker__panel">
+    <div class="language-picker__welcome" aria-hidden="true">
+      <div class="language-picker__globe">
+        <svg viewBox="0 0 100 100" width="86" height="86" fill="none">
+          <ellipse
+            class="language-picker__orbit"
+            cx="50"
+            cy="50"
+            rx="47"
+            ry="18"
+            transform="rotate(-28 50 50)"></ellipse>
+          <circle class="language-picker__sphere" cx="50" cy="50" r="34"
+          ></circle>
+          <g class="language-picker__atlas">
+            <ellipse cx="50" cy="50" rx="34" ry="13"></ellipse>
+            <path d="M21 32Q50 45 79 32M21 68Q50 55 79 68"></path>
+            <g class="language-picker__meridians">
+              <ellipse cx="50" cy="50" rx="15" ry="34"></ellipse>
+              <ellipse cx="50" cy="50" rx="28" ry="34"></ellipse>
+              <path d="M50 16V84"></path>
+            </g>
+          </g>
+          <path
+            class="language-picker__spark"
+            d="M84 12v10m-5-5h10M15 77v6m-3-3h6"></path>
+          <circle class="language-picker__traveler" cx="89" cy="29" r="3"
+          ></circle>
+        </svg>
+      </div>
+      <span class="language-picker__bubble" lang={locale}
+        >{languages[locale].greeting}</span
+      >
+    </div>
     <p class="language-picker__heading">
       {ui.chooseLanguage}<Icon name="flower" />
     </p>
@@ -50,6 +82,8 @@ const choices = await Promise.all(
                 class="language-picker__option"
                 href={choice.href}
                 hreflang={choice.locale}
+                data-language={choice.locale}
+                data-greeting={choice.greeting}
                 aria-current={choice.locale === locale ? 'true' : undefined}
               >
                 <span class="language-picker__code" aria-hidden="true">
@@ -57,25 +91,45 @@ const choices = await Promise.all(
                 </span>
                 <span>
                   <span lang={choice.locale}>{choice.nativeName}</span>
+                  <span
+                    class="language-picker__row-greeting"
+                    lang={choice.locale}
+                  >
+                    {choice.greeting}
+                  </span>
                   {!choice.samePage && <small>{ui.browseTranslations}</small>}
                 </span>
                 {choice.locale === locale && (
                   <>
-                    <Icon name="check" />
+                    <span class="language-picker__postmark">
+                      <Icon name="check" />
+                    </span>
                     <span class="sr-only">{ui.currentLanguage}</span>
                   </>
                 )}
               </a>
             ) : (
-              <span class="language-picker__option language-picker__option--unavailable">
+              <button
+                type="button"
+                aria-disabled="true"
+                data-language={choice.locale}
+                data-greeting={choice.greeting}
+                class="language-picker__option language-picker__option--unavailable"
+              >
                 <span class="language-picker__code" aria-hidden="true">
                   {choice.locale.split('-')[0]?.toUpperCase()}
                 </span>
                 <span>
                   <span lang={choice.locale}>{choice.nativeName}</span>
+                  <span
+                    class="language-picker__row-greeting"
+                    lang={choice.locale}
+                  >
+                    {choice.greeting}
+                  </span>
                   <small>{ui.notTranslated}</small>
                 </span>
-              </span>
+              </button>
             )}
           </li>
         ))
@@ -89,6 +143,42 @@ const choices = await Promise.all(
     '[data-language-picker]',
   );
   if (picker) {
+    const greeting = picker.querySelector<HTMLElement>(
+      '.language-picker__bubble',
+    );
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const current = picker.querySelector<HTMLElement>('[aria-current]');
+    const preview = (option: HTMLElement | null) => {
+      const language = option?.dataset['language'];
+      const text = option?.dataset['greeting'];
+      if (!greeting || !language || !text || greeting.lang === language) return;
+      greeting.lang = language;
+      greeting.replaceChildren(document.createTextNode(text));
+      picker.dataset['preview'] = language;
+      if (!reducedMotion.matches) {
+        greeting.getAnimations().forEach((animation) => animation.cancel());
+        greeting.animate(
+          [{ transform: 'translateY(4px)' }, { transform: 'translateY(0)' }],
+          { duration: 220, easing: 'ease-out' },
+        );
+      }
+    };
+    const optionFrom = (target: EventTarget | null) =>
+      target instanceof Element
+        ? target.closest<HTMLElement>('[data-language]')
+        : null;
+    picker.addEventListener('pointerover', (event) =>
+      preview(optionFrom(event.target)),
+    );
+    picker.addEventListener('focusin', (event) =>
+      preview(optionFrom(event.target)),
+    );
+    picker.addEventListener('pointerleave', () =>
+      preview(optionFrom(document.activeElement) ?? current),
+    );
+    picker.addEventListener('toggle', () => {
+      if (!picker.open) preview(current);
+    });
     document.addEventListener('click', (event) => {
       if (event.target instanceof Node && !picker.contains(event.target))
         picker.open = false;
@@ -111,6 +201,7 @@ const choices = await Promise.all(
 
 <style>
   .language-picker {
+    --globe-turn: -12deg;
     position: relative;
     flex: none;
     font-size: 0.8125rem;
@@ -153,11 +244,87 @@ const choices = await Promise.all(
     max-height: min(640px, 75vh);
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 18px 12px 10px;
+    padding: 16px 12px 12px;
     border: 1px solid var(--line);
-    border-radius: 18px;
+    border-radius: 8px 20px 20px 8px;
     background: var(--bg);
     box-shadow: 0 12px 36px #10201026;
+  }
+  .language-picker__panel::before {
+    content: '';
+    position: absolute;
+    inset: 10px auto 10px 5px;
+    border-inline-start: 1px dashed var(--line);
+  }
+  .language-picker__welcome {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 6px 12px;
+  }
+  .language-picker__globe {
+    flex: none;
+    width: 86px;
+    height: 86px;
+    color: var(--sage);
+    transform: rotate(var(--globe-turn));
+    transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .language-picker[data-preview='es'] {
+    --globe-turn: 8deg;
+  }
+  .language-picker[data-preview='fr'] {
+    --globe-turn: -22deg;
+  }
+  .language-picker[data-preview='zh-CN'] {
+    --globe-turn: 20deg;
+  }
+  .language-picker__sphere {
+    fill: var(--sage-soft);
+    stroke: currentColor;
+    stroke-width: 1.4;
+  }
+  .language-picker__atlas {
+    stroke: currentColor;
+    stroke-width: 0.85;
+    opacity: 0.65;
+  }
+  .language-picker__meridians {
+    transform-origin: 50px 50px;
+  }
+  .language-picker[open] .language-picker__meridians {
+    animation: globe-arrival 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .language-picker__orbit {
+    stroke: var(--gold);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+  }
+  .language-picker__spark {
+    stroke: var(--rose);
+    stroke-linecap: round;
+  }
+  .language-picker__traveler {
+    fill: var(--rose);
+    stroke: var(--bg);
+    stroke-width: 2;
+  }
+  .language-picker__bubble {
+    position: relative;
+    min-width: 0;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px 14px 14px 3px;
+    color: var(--sage);
+    background: var(--sage-soft);
+    font-size: 1.625rem;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.4;
+  }
+  .language-picker__bubble::after {
+    content: '.';
+    color: var(--rose);
   }
   .language-picker__heading {
     --icon-size: 19px;
@@ -170,7 +337,9 @@ const choices = await Promise.all(
     font-weight: 600;
   }
   .language-picker__note {
-    margin: 5px 6px 12px;
+    margin: 5px 6px 10px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--line);
     color: var(--muted);
     font-size: 0.75rem;
   }
@@ -182,45 +351,97 @@ const choices = await Promise.all(
   .language-picker__option {
     --icon-size: 16px;
     display: grid;
-    grid-template-columns: 32px minmax(0, 1fr) 16px;
+    grid-template-columns: 36px minmax(0, 1fr) 26px;
     align-items: center;
     gap: 10px;
-    min-height: 48px;
-    padding: 7px;
-    border-radius: 10px;
+    width: 100%;
+    min-height: 64px;
+    padding: 8px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
     color: var(--text);
+    font: inherit;
+    text-align: start;
     text-decoration: none;
+    transition: background-color 150ms ease;
   }
   .language-picker__option:hover,
   .language-picker__option[aria-current] {
     color: var(--sage);
     background: var(--sage-soft);
   }
-  .language-picker__option--unavailable,
-  .language-picker__option--unavailable:hover {
+  .language-picker__option--unavailable {
     color: var(--muted);
-    background: transparent;
+    cursor: default;
   }
   .language-picker__code {
     display: grid;
     place-items: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 36px;
+    height: 40px;
+    border: 1px dashed var(--sage);
+    outline: 3px solid var(--sage-soft);
+    outline-offset: -5px;
+    border-radius: 2px;
     background: var(--sage-soft);
     color: var(--sage);
     font-family: var(--font-mono);
     font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    transform: rotate(-5deg);
+    transition: transform 200ms ease;
+  }
+  .language-picker__list li:nth-child(even) .language-picker__code {
+    transform: rotate(5deg);
+  }
+  .language-picker__option:is(:hover, :focus-visible) .language-picker__code {
+    transform: rotate(0);
+  }
+  .language-picker__row-greeting {
+    display: block;
+    color: var(--sage);
+    font-size: 0.6875rem;
+  }
+  .language-picker__postmark {
+    --icon-color: var(--rose);
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--rose);
+    border-radius: 50%;
+    outline: 1px dotted var(--rose);
+    outline-offset: 2px;
+    transform: rotate(-12deg);
   }
   .language-picker__option small {
     display: block;
-    color: var(--muted);
+    color: var(--text);
     font-size: 0.6875rem;
   }
   @media (max-width: 600px) {
     .language-picker__panel {
       inset-inline-start: 0;
       inset-inline-end: auto;
+    }
+  }
+  @keyframes globe-arrival {
+    from {
+      transform: rotateY(-160deg);
+    }
+    to {
+      transform: rotateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .language-picker__globe,
+    .language-picker__option,
+    .language-picker__code {
+      transition: none;
+    }
+    .language-picker[open] .language-picker__meridians {
+      animation: none;
     }
   }
 </style>

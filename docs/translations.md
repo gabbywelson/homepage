@@ -92,7 +92,13 @@ translation quality with readers of each language.
 
 A language is usable only when its complete UI dictionary and at least one
 published translated content file exist. The picker displays all planned
-languages, but unavailable choices are noninteractive and labeled accordingly.
+languages, but unavailable choices are marked disabled and cannot navigate.
+They remain focusable to preview their greeting with a keyboard. The passport-style
+menu includes a small globe that turns on opening and tilts as languages are
+explored; greetings respond to hover and keyboard focus. Reduced-motion preferences
+disable the animations. Without JavaScript, the native disclosure, language links,
+and printed greetings still work. Greetings live alongside native language names
+in `src/i18n/locales.ts`, rather than being translated from the current UI language.
 Available choices link to the current page's translation, or its translated blog
 index when that page is unavailable. English remains accessible.
 
