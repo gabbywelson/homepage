@@ -17,6 +17,16 @@
   --dial-horizon: #d4d4b8;
   --dial-ground: #c2cbaa;
   --dial-ground-front: #a8b691;
+  --github-empty: #eff2f5;
+  --github-cell-border: #1b1f230f;
+  --github-personal-1: #e2c5f9;
+  --github-personal-2: #c08beb;
+  --github-personal-3: #9861d1;
+  --github-personal-4: #713eab;
+  --github-work-1: #9be9a8;
+  --github-work-2: #40c463;
+  --github-work-3: #30a14e;
+  --github-work-4: #216e39;
   color-scheme: light;
 }
 
@@ -38,6 +48,16 @@
   --dial-horizon: #53624e;
   --dial-ground: #56654d;
   --dial-ground-front: #748265;
+  --github-empty: #151b23;
+  --github-cell-border: #ffffff0d;
+  --github-personal-1: #3e245b;
+  --github-personal-2: #603993;
+  --github-personal-3: #9062c7;
+  --github-personal-4: #be91f2;
+  --github-work-1: #0e4429;
+  --github-work-2: #006d32;
+  --github-work-3: #26a641;
+  --github-work-4: #39d353;
   color-scheme: dark;
 }
 
@@ -61,6 +81,16 @@
     --dial-horizon: #53624e;
     --dial-ground: #56654d;
     --dial-ground-front: #748265;
+    --github-empty: #151b23;
+    --github-cell-border: #ffffff0d;
+    --github-personal-1: #3e245b;
+    --github-personal-2: #603993;
+    --github-personal-3: #9062c7;
+    --github-personal-4: #be91f2;
+    --github-work-1: #0e4429;
+    --github-work-2: #006d32;
+    --github-work-3: #26a641;
+    --github-work-4: #39d353;
     color-scheme: dark;
   }
 }

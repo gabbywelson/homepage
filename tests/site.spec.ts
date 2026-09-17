@@ -133,14 +133,16 @@ for (const colorScheme of ['light', 'dark'] as const) {
 
   test(`navigation and system theme work without JavaScript (${colorScheme})`, async ({
     browser,
+    baseURL,
   }) => {
     const context = await browser.newContext({
+      ...(baseURL ? { baseURL } : {}),
       javaScriptEnabled: false,
       colorScheme,
       viewport: { width: 390, height: 844 },
     });
     const page = await context.newPage();
-    await page.goto('http://127.0.0.1:4322/');
+    await page.goto('/');
     await expect(page.locator('h1')).toHaveText("I'm Gabby.");
     await expect(
       page.getByRole('button', { name: 'Dark mode', exact: true }),
@@ -302,6 +304,7 @@ test('migrated writing preserves chronology, footnotes, local images, and dated 
 test('legacy URLs provide static redirects to the migrated content without JavaScript', async ({
   browser,
   request,
+  baseURL,
 }) => {
   for (const [from, to] of Object.entries(redirects)) {
     const response = await request.get(`${from}/`);
@@ -309,10 +312,13 @@ test('legacy URLs provide static redirects to the migrated content without JavaS
     expect(await response.text(), from).toContain(`url=${to}`);
     expect((await request.get(to)).ok(), to).toBe(true);
   }
-  const context = await browser.newContext({ javaScriptEnabled: false });
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    ...(baseURL ? { baseURL } : {}),
+  });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4322/posts/coming-out/');
-  await page.waitForURL('http://127.0.0.1:4322/blog/coming-out/');
+  await page.goto('/posts/coming-out/');
+  await page.waitForURL('**/blog/coming-out/');
   await expect(page.locator('h1')).toHaveText('Coming out.');
   await context.close();
 });

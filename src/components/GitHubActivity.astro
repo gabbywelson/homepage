@@ -1,0 +1,425 @@
+---
+import { calendarWeeks, loadGitHubActivity } from '../lib/github-activity';
+import { demoGitHubActivity } from '../lib/github-activity-demo';
+import { site } from '../data/site';
+
+const demo = import.meta.env['GITHUB_ACTIVITY_DEMO'] === 'true';
+if (demo && site.indexable) {
+  throw new Error(
+    'GITHUB_ACTIVITY_DEMO must be disabled before a production build.',
+  );
+}
+const activity = demo
+  ? demoGitHubActivity()
+  : await loadGitHubActivity({
+      personalToken: import.meta.env['GITHUB_PERSONAL_TOKEN'],
+      workToken: import.meta.env['GITHUB_WORK_TOKEN'],
+    });
+const weeks = calendarWeeks(activity?.days ?? []);
+const weekdays = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
+const dateFormat = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const monthFormat = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  timeZone: 'UTC',
+});
+const number = (value: number) => value.toLocaleString('en-US');
+const dateLabel = (date: string) =>
+  dateFormat.format(new Date(`${date}T00:00:00Z`));
+const months: { label: string; span: number }[] = [];
+for (const week of weeks) {
+  const day = week.find((day) => day !== null);
+  if (!day) continue;
+  const label = monthFormat.format(new Date(`${day.date}T00:00:00Z`));
+  const previous = months.at(-1);
+  if (previous?.label === label) previous.span++;
+  else months.push({ label, span: 1 });
+}
+const lastMonth = months.at(-1);
+// A final one-week label would spill beyond the calendar edge.
+if (lastMonth && lastMonth.span < 2) lastMonth.label = '';
+---
+
+{
+  activity && (
+    <section
+      class="github-activity"
+      aria-labelledby="github-heading"
+      data-github-activity
+    >
+      <div class="github-activity__heading">
+        <h2 id="github-heading">On GitHub</h2>
+        {demo && (
+          <span class="github-activity__preview">Preview · sample data</span>
+        )}
+      </div>
+      <p class="github-activity__summary">
+        <strong>{number(activity.total)} contributions</strong> in the last year
+      </p>
+      <div class="github-activity__calendar">
+        <div class="github-activity__scroll" data-calendar-scroll>
+          <table
+            class="github-activity__grid"
+            role="grid"
+            aria-label="Combined GitHub contributions by day"
+            aria-describedby="github-instructions"
+          >
+            <thead>
+              <tr>
+                <td class="github-activity__corner" />
+                {months.map((month) => (
+                  <th scope="colgroup" colspan={month.span}>
+                    {month.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {weekdays.map((weekday, row) => (
+                <tr>
+                  <th scope="row" class="github-activity__weekday">
+                    <span
+                      class:list={{ 'sr-only': row % 2 === 0 }}
+                      aria-hidden="true"
+                    >
+                      {weekday.slice(0, 3)}
+                    </span>
+                    <span class="sr-only">{weekday}</span>
+                  </th>
+                  {weeks.map((week) => {
+                    const day = week[row];
+                    const label = day
+                      ? `${dateLabel(day.date)}: ${number(day.total)} ${day.total === 1 ? 'contribution' : 'contributions'} · ${number(day.personal)} personal · ${number(day.work)} work`
+                      : '';
+                    return (
+                      <td>
+                        {day && (
+                          <button
+                            type="button"
+                            class="github-activity__day"
+                            data-date={day.date}
+                            data-kind={
+                              day.personal && day.work
+                                ? 'both'
+                                : day.personal
+                                  ? 'personal'
+                                  : day.work
+                                    ? 'work'
+                                    : 'none'
+                            }
+                            data-level={day.level}
+                            tabindex={day.date === activity.to ? 0 : -1}
+                            aria-label={label}
+                            title={label}
+                          />
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="github-activity__key">
+          <span>Less</span>
+          <span class="github-activity__scale" aria-hidden="true">
+            {[0, 1, 2, 3, 4].map((level) => (
+              <span
+                class="github-activity__swatch"
+                data-kind="both"
+                data-level={level}
+              />
+            ))}
+          </span>
+          <span>More</span>
+        </div>
+      </div>
+      <div class="github-activity__accounts">
+        <a
+          href="https://github.com/gabbywelson"
+          class="github-activity__account"
+        >
+          <span
+            class="github-activity__swatch"
+            data-kind="personal"
+            data-level="3"
+            aria-hidden="true"
+          />
+          Personal{' '}
+          <span class="github-activity__count">
+            {number(activity.personal)}
+          </span>
+          <span class="sr-only">contributions by @gabbywelson</span>
+        </a>
+        <a href="https://github.com/ggwelson" class="github-activity__account">
+          <span
+            class="github-activity__swatch"
+            data-kind="work"
+            data-level="3"
+            aria-hidden="true"
+          />
+          Work{' '}
+          <span class="github-activity__count">{number(activity.work)}</span>
+          <span class="sr-only">contributions by @ggwelson</span>
+        </a>
+        <span class="github-activity__both">
+          <span
+            class="github-activity__swatch"
+            data-kind="both"
+            data-level="3"
+            aria-hidden="true"
+          />{' '}
+          Both
+        </span>
+      </div>
+      <p
+        class="github-activity__detail"
+        data-calendar-detail
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        Two accounts, one little trail of things built.
+      </p>
+      <p id="github-instructions" class="sr-only">
+        Hover or tap a day for counts. With the calendar focused, use arrow keys
+        to explore days, Home or End for the week, and Control Home or Control
+        End for the year. Split squares mean both accounts were active;
+        intensity shows the combined count.
+      </p>
+      <p class="github-activity__note">
+        {demo ? (
+          'Illustrative activity only.'
+        ) : (
+          <>
+            Through <time datetime={activity.to}>{dateLabel(activity.to)}</time>
+            .
+          </>
+        )}{' '}
+        Commits, pull requests, issues &amp; reviews.
+      </p>
+    </section>
+  )
+}
+
+<script>
+  import '../scripts/github-activity';
+</script>
+
+<style>
+  .github-activity {
+    margin-top: 48px;
+  }
+
+  .github-activity__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .github-activity__preview {
+    color: var(--lilac);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+
+  .github-activity__summary {
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+
+  .github-activity__summary strong {
+    color: var(--text);
+    font-weight: 550;
+  }
+
+  .github-activity__calendar {
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+
+  .github-activity__scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+    padding: 3px;
+  }
+
+  .github-activity__grid {
+    width: 100%;
+    min-width: 570px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 3px;
+    color: var(--muted);
+    font-size: 0.625rem;
+    line-height: 1;
+  }
+
+  .github-activity__grid th {
+    padding: 0;
+    font-weight: 400;
+    text-align: left;
+  }
+
+  .github-activity__grid thead th {
+    height: 18px;
+    vertical-align: top;
+  }
+
+  .github-activity__grid td {
+    padding: 0;
+  }
+
+  .github-activity__corner {
+    width: 26px;
+  }
+
+  .github-activity__day,
+  .github-activity__swatch {
+    --personal-color: var(--github-personal-1);
+    --work-color: var(--github-work-1);
+    display: block;
+    border: 1px solid var(--github-cell-border);
+    border-radius: 2px;
+    background: var(--github-empty);
+  }
+
+  .github-activity__day {
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .github-activity__day:hover,
+  .github-activity__day:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 1px;
+  }
+
+  [data-level='2'] {
+    --personal-color: var(--github-personal-2);
+    --work-color: var(--github-work-2);
+  }
+
+  [data-level='3'] {
+    --personal-color: var(--github-personal-3);
+    --work-color: var(--github-work-3);
+  }
+
+  [data-level='4'] {
+    --personal-color: var(--github-personal-4);
+    --work-color: var(--github-work-4);
+  }
+
+  [data-kind='personal'] {
+    background: var(--personal-color);
+  }
+
+  [data-kind='work'] {
+    background: var(--work-color);
+  }
+
+  [data-kind='both']:not([data-level='0']) {
+    background: linear-gradient(
+      135deg,
+      var(--personal-color) 50%,
+      var(--work-color) 50%
+    );
+  }
+
+  .github-activity__key,
+  .github-activity__scale,
+  .github-activity__accounts,
+  .github-activity__account,
+  .github-activity__both {
+    display: flex;
+    align-items: center;
+  }
+
+  .github-activity__key {
+    justify-content: flex-end;
+    gap: 7px;
+    margin-top: 9px;
+    color: var(--muted);
+    font-size: 0.625rem;
+  }
+
+  .github-activity__scale {
+    gap: 3px;
+  }
+
+  .github-activity__swatch {
+    flex: 0 0 10px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .github-activity__accounts {
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin-top: 13px;
+    font-size: 0.75rem;
+  }
+
+  .github-activity__account,
+  .github-activity__both {
+    gap: 7px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .github-activity__account:hover {
+    color: var(--text);
+    text-decoration: underline;
+  }
+
+  .github-activity__count {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .github-activity__detail {
+    min-height: 3.6em;
+    margin-top: 13px;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .github-activity__note {
+    color: var(--muted);
+    font-size: 0.6875rem;
+  }
+
+  @media print {
+    .github-activity {
+      break-inside: avoid;
+    }
+
+    .github-activity__grid {
+      min-width: 0;
+    }
+
+    .github-activity__calendar {
+      print-color-adjust: exact;
+    }
+  }
+</style>

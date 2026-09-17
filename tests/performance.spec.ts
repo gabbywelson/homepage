@@ -47,7 +47,7 @@ test('saved theme and reserved dial space work before the client module loads', 
   await page.addInitScript(() => localStorage.setItem('theme', 'dark'));
   // Astro can inline small modules; make both inline and external modules inert.
   // The synchronous head bootstrap remains intact and must set the first theme.
-  await page.route('http://127.0.0.1:4322/', async (route) => {
+  await page.route('/', async (route) => {
     const response = await route.fetch();
     await route.fulfill({
       response,
