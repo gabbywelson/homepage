@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { Font } from 'astro:assets';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
+import { source } from '../lib/source';
 import themeBootstrap from '../scripts/theme-bootstrap.js?raw';
 
 interface Props {
@@ -126,8 +127,20 @@ const active = (href: string) =>
           </nav>
         </div>
         <div class="footer-note">
-          <span>made with 💜 in san francisco</span><a href="/colophon/"
-            >read the colophon <Icon name="arrow" /></a
+          <span>made with 💜 in san francisco</span><a
+            href={source.href}
+            aria-label={source.shortCommit
+              ? `View source on GitHub at commit ${source.shortCommit}`
+              : 'View source on GitHub'}
+            >source{
+              source.shortCommit && (
+                <>
+                  {' · '}
+                  <code class="footer-note__commit">{source.shortCommit}</code>
+                </>
+              )
+            }
+            <Icon name="arrow" /></a
           >
         </div>
       </footer>
@@ -271,6 +284,11 @@ const active = (href: string) =>
   .footer-note a:hover {
     color: var(--rose);
     text-decoration: underline;
+  }
+
+  .footer-note__commit {
+    font-family: var(--font-mono);
+    font-size: inherit;
   }
 
   .skip-link {

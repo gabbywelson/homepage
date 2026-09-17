@@ -136,6 +136,12 @@ bun run deploy
 Ordinary `bun run build` and development remain non-indexable. The workers.dev
 URL also receives an `X-Robots-Tag` header to avoid duplicate indexing.
 
+The footer links to the Git commit checked out when Astro builds the site.
+Commit and push changes before deploying so that link describes the release
+and is available on GitHub. The hash is baked into the HTML; later pushes to
+`main` do not change an existing deployment's link. Builds without Git metadata
+fall back to the repository link.
+
 `build` runs `scripts/hosting.mjs` after Astro to generate real HTTP 301 rules
 from `src/data/legacy-redirects.json`, for both slash variants. `public/_headers`
 sets immutable caching for hashed `/_astro/` assets; HTML revalidates normally.
