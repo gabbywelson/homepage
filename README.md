@@ -74,6 +74,14 @@ The homepage uses Gabby's supplied copy. Work history, accomplishments, educatio
 
 The social links were carried over from the public configuration in the old garden; review them before launch. Six blog posts, six garden notes, and the About, Now, Uses, and garden introduction have been imported. The colophon describes the current Astro site and preserves the earlier Quartz colophon as history. See [migration notes](docs/garden-migration.md) for dates, source mappings, and unavailable material.
 
+## GitHub activity
+
+The homepage can merge the contribution calendars for `gabbywelson` and
+`ggwelson`. Add `GITHUB_PERSONAL_TOKEN` and `GITHUB_WORK_TOKEN` to `.env.local`;
+each is a classic PAT with only `read:user`. See
+[setup, privacy, preview, and refresh instructions](docs/github-activity.md).
+Tokens are used only at build time. Without tokens the section is omitted.
+
 ## Writing a post
 
 Add a Markdown file to `src/content/blog/`:
@@ -98,7 +106,7 @@ Slash pages and garden notes also use Markdown. Both require `title` and `descri
 
 Maple Mono headings, DM Sans body text, Phosphor SVG icons, and a warm paper / evening garden palette. All fonts and icons are served locally; only the selected SVGs are rendered into HTML. Font licenses and the icon license are in `public/`.
 
-Pages are pre-rendered HTML, with no framework hydration or third-party requests. The theme dial is the only client interaction. It respects the system setting until a choice is made, remembers that choice when storage is available, follows changes from another tab, and skips transitions with reduced motion. With JavaScript disabled, the theme follows the system and the nonfunctional button stays hidden.
+Pages are pre-rendered HTML, with no framework hydration or third-party browser requests. Small browser scripts enhance the theme dial and contribution-calendar navigation. The theme respects the system setting until a choice is made, remembers that choice when storage is available, follows changes from another tab, and skips transitions with reduced motion. With JavaScript disabled, the theme follows the system and the nonfunctional button stays hidden; the contribution calendar still renders with native day tooltips.
 
 Astro's local font provider generates hashed URLs and adjusted fallback faces.
 The normal body and heading faces are preloaded; italics load on demand. Fonts
