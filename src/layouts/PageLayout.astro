@@ -8,27 +8,11 @@ interface Props {
   description?: string | undefined;
   eyebrow?: string | undefined;
   noindex?: boolean | undefined;
-  contentLanguage?: string | undefined;
-  canonicalPath?: string | undefined;
 }
-const {
-  title,
-  intro,
-  description = intro,
-  eyebrow,
-  noindex,
-  contentLanguage,
-  canonicalPath,
-} = Astro.props;
+const { title, intro, description = intro, eyebrow, noindex } = Astro.props;
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  noindex={noindex}
-  contentLanguage={contentLanguage}
-  canonicalPath={canonicalPath}
->
+<BaseLayout title={title} description={description} noindex={noindex}>
   <div class="page-heading">
     <div>
       {eyebrow && <p class="eyebrow">{eyebrow}</p>}<h1>

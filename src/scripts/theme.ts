@@ -29,9 +29,7 @@ export function initializeThemeDial(): void {
   const apply = (theme: Theme): void => {
     root.dataset['theme'] = theme;
     button.setAttribute('aria-pressed', String(theme === 'dark'));
-    button.title =
-      button.dataset[theme === 'dark' ? 'switchLight' : 'switchDark'] ??
-      button.title;
+    button.title = `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`;
     if (browserTheme)
       browserTheme.content = theme === 'dark' ? '#202721' : '#faf8f3';
   };

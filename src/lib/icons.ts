@@ -17,9 +17,6 @@ import twitter from '@phosphor-icons/core/assets/regular/twitter-logo.svg?raw';
 import rss from '@phosphor-icons/core/assets/regular/rss.svg?raw';
 import arrow from '@phosphor-icons/core/assets/regular/arrow-up-right.svg?raw';
 import right from '@phosphor-icons/core/assets/regular/arrow-right.svg?raw';
-import globe from '@phosphor-icons/core/assets/duotone/globe-hemisphere-west-duotone.svg?raw';
-import chevron from '@phosphor-icons/core/assets/regular/caret-down.svg?raw';
-import check from '@phosphor-icons/core/assets/regular/check.svg?raw';
 export const icons = {
   plant,
   flower,
@@ -40,8 +37,5 @@ export const icons = {
   rss,
   arrow,
   right,
-  globe,
-  chevron,
-  check,
 };
 export type IconName = keyof typeof icons;

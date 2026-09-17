@@ -1,13 +1,13 @@
 ---
 title: Uses
-priorityImage: ../../../assets/garden/desk.jpeg
+priorityImage: ../../assets/garden/desk.jpeg
 eyebrow: Everyday companions
 description: My desk setup, favorite tools, and the things I take along.
 ---
 
 ## Desk Setup
 
-![My desk setup with a monitor, keyboard, speakers, and microphone](../../../assets/garden/desk.jpeg)
+![My desk setup with a monitor, keyboard, speakers, and microphone](../../assets/garden/desk.jpeg)
 
 ### Hardware
 
