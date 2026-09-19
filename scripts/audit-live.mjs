@@ -40,8 +40,14 @@ const output = new URL('../lighthouse-report/published/', import.meta.url);
 await mkdir(output, { recursive: true });
 /** @type {import('./lib/audit-results.mjs').AuditRun[]} */
 const runs = [];
+const chromeFlags = ['--headless', '--disable-extensions'];
+// GitHub's Ubuntu runners restrict the downloaded Chromium's sandbox startup.
+// Limit this exception to the disposable CI runner auditing our public homepage.
+if (process.platform === 'linux' && process.env['GITHUB_ACTIONS'] === 'true')
+  chromeFlags.push('--no-sandbox');
 const chrome = await launch({
-  chromeFlags: ['--headless', '--disable-extensions'],
+  chromeFlags,
+  logLevel: 'error',
 });
 try {
   for (const profile of auditProfiles) {

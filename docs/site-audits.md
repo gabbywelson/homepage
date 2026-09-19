@@ -24,6 +24,10 @@ HTML index to ignored `lighthouse-report/published/`. Report pages use `noindex`
 The pinned
 Playwright Chromium executable runs the pinned Lighthouse version from bun.lock.
 No GitHub or Cloudflare credentials are sent to the audited browser.
+On Linux GitHub Actions runners only, Chromium uses `--no-sandbox` because the
+runner restricts sandbox startup for downloaded browsers. Local runs retain the
+browser sandbox. Launcher errors are logged so a startup failure includes
+Chromium's diagnostic output instead of only a refused DevTools connection.
 
 A separate job checks the live commit again and publishes the artifact to
 GitHub Pages at <https://gabbywelson.github.io/homepage/>. Only generated reports
@@ -82,5 +86,6 @@ The existing `scripts/lighthouse.mjs` remains the local preview budget checker;
 preview indexing protection is unchanged.
 
 References: [Lighthouse variability](https://github.com/GoogleChrome/lighthouse/blob/main/docs/variability.md),
+[Lighthouse CI browser troubleshooting](https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/troubleshooting.md#lighthouse-is-failing-to-run-how-do-i-fix-it),
 [workflow triggers](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#check_run),
 [GitHub Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
