@@ -2,6 +2,7 @@
 import '../styles/prose.css';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import PageLayout from '../layouts/PageLayout.astro';
+import SiteAudit from '../components/SiteAudit.astro';
 import { formatDate } from '../lib/posts';
 
 export async function getStaticPaths() {
@@ -33,6 +34,7 @@ const { Content } = await render(entry);
     )
   }
   <div class="prose"><Content /></div>
+  {entry.id === 'colophon' && <SiteAudit />}
   <p class="content-footer">
     <a class="quiet-link" href="/garden/">← Back to the garden</a>
   </p>

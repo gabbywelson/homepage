@@ -1,0 +1,169 @@
+---
+import {
+  auditCategories,
+  auditProfiles,
+  auditReports,
+} from '../lib/site-audit';
+---
+
+<section class="site-audit" aria-labelledby="site-audit-title" data-site-audit>
+  <p class="site-audit__eyebrow">A comfortable visit</p>
+  <h2 id="site-audit-title">Keeping this little corner quick</h2>
+  <p class="site-audit__intro">
+    A small check on how the homepage is doing, measured with Lighthouse after
+    each production release.
+  </p>
+  <table class="site-audit__scores">
+    <caption class="sr-only"
+      >Latest completed homepage audit, median of three runs per device</caption
+    >
+    <thead>
+      <tr
+        ><th scope="col">Lighthouse score</th><th scope="col">Desktop</th><th
+          scope="col">Mobile</th
+        ></tr
+      >
+    </thead>
+    <tbody>
+      {
+        auditCategories.map(({ key, label }) => (
+          <tr>
+            <th scope="row">{label}</th>
+            {auditProfiles.map((profile) => (
+              <td data-audit-score={`${profile}:${key}`}>
+                <span aria-label="Not yet loaded">—</span>
+              </td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  <p class="site-audit__status" data-audit-status role="status">
+    The latest dated results are available in the full reports.
+  </p>
+  <p class="site-audit__source" data-audit-source hidden>
+    Lighthouse <span data-audit-version></span>{' · '}
+    <a href="https://github.com/gabbywelson/homepage" data-audit-commit
+      >View audited source</a
+    >
+  </p>
+  <p class="site-audit__note">
+    Scores are out of 100 and show the median of three runs on each device.
+    These are automated lab checks; they’re one part of making the site
+    comfortable and accessible.
+  </p>
+  <a class="site-audit__reports" href={auditReports}
+    >Browse the full reports ↗</a
+  >
+</section>
+
+<script>
+  import '../scripts/site-audit';
+</script>
+
+<style>
+  .site-audit {
+    margin-top: 44px;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+  }
+
+  .site-audit__eyebrow {
+    margin-bottom: 10px;
+    color: var(--sage);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .site-audit h2 {
+    margin-bottom: 14px;
+    font-size: 1.35rem;
+    line-height: 1.4;
+  }
+
+  .site-audit__intro {
+    color: var(--muted);
+  }
+
+  .site-audit__scores {
+    width: 100%;
+    margin: 24px 0 18px;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .site-audit__scores th,
+  .site-audit__scores td {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+
+  .site-audit__scores th:first-child {
+    width: 48%;
+    padding-right: 8px;
+    text-align: left;
+  }
+
+  .site-audit__scores thead th {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 400;
+  }
+
+  .site-audit__scores tbody th {
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .site-audit__scores td {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 1.35rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .site-audit__scores td[data-rating='good'] {
+    color: var(--sage);
+  }
+
+  .site-audit__scores td[data-rating='moderate'] {
+    color: var(--gold);
+  }
+
+  .site-audit__scores td[data-rating='poor'] {
+    color: var(--rose);
+  }
+
+  .site-audit__status,
+  .site-audit__source,
+  .site-audit__note,
+  .site-audit__reports {
+    font-size: 0.75rem;
+    line-height: 1.7;
+  }
+
+  .site-audit__status {
+    min-height: 2.55em;
+    margin-bottom: 4px;
+  }
+
+  .site-audit__source {
+    margin-bottom: 14px;
+    color: var(--muted);
+  }
+
+  .site-audit__note {
+    margin-bottom: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 400px) {
+    .site-audit__scores td {
+      font-size: 1.15rem;
+    }
+  }
+</style>
