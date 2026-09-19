@@ -3,6 +3,7 @@
   "compilerOptions": {
     "types": ["node"],
     "checkJs": true,
+    "allowImportingTsExtensions": true,
     "noPropertyAccessFromIndexSignature": true
   },
   "include": [

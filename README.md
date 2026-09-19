@@ -129,6 +129,10 @@ https://github.com/subframe7536/maple-font/tree/v7/woff2/var
 
 ## Deploy
 
+The Colophon can display automated desktop/mobile Lighthouse measurements of the
+deployed homepage. [Public site audits](docs/site-audits.md) documents the
+post-deployment workflow, report hosting, and one-time activation.
+
 The public repository is https://github.com/gabbywelson/homepage. Cloudflare
 Workers Static Assets serves `dist/` without a server runtime or SSR adapter.
 `wrangler.jsonc` owns the `homepage` Worker and its `welson.net` and

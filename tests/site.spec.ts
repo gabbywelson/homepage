@@ -98,6 +98,8 @@ for (const colorScheme of ['light', 'dark'] as const) {
   test(`all routes are accessible and fit mobile in ${colorScheme} mode`, async ({
     page,
   }) => {
+    // Each test scans every route; shared CI runners can exceed 30 seconds.
+    test.setTimeout(90_000);
     await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));

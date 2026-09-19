@@ -1,0 +1,114 @@
+name: Homepage Lighthouse
+
+on:
+  push:
+    branches: [main]
+  check_run:
+    types: [completed]
+  workflow_dispatch:
+
+# The push trigger is a fallback for GitHub's check_run recursion suppression.
+# The deployment check + live commit gate ensures previews are never published.
+permissions:
+  contents: read
+  checks: read
+
+concurrency:
+  # Unrelated checks must not displace a queued production measurement.
+  group: >-
+    homepage-lighthouse-${{ (github.event_name != 'check_run' ||
+      (github.event.check_run.app.id == 85455 &&
+       github.event.check_run.name == 'Workers Builds: homepage' &&
+       github.event.check_run.conclusion == 'success' &&
+       github.event.check_run.head_sha == github.sha)) && 'production' || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: >-
+      github.event_name != 'check_run' ||
+      (github.event.check_run.app.id == 85455 &&
+       github.event.check_run.name == 'Workers Builds: homepage' &&
+       github.event.check_run.conclusion == 'success' &&
+       github.event.check_run.head_sha == github.sha)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      ready: ${{ steps.release.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Always run trusted default-branch tooling, never a PR's scripts.
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Wait for the production release
+        id: release
+        run: node scripts/audit-deployment.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AUDIT_COMMIT: ${{ github.event.check_run.head_sha || github.sha }}
+          AUDIT_FORCE: ${{ github.event_name == 'workflow_dispatch' }}
+      - uses: oven-sh/setup-bun@v2
+        if: steps.release.outputs.ready == 'true'
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+        if: steps.release.outputs.ready == 'true'
+      - name: Install the pinned browser
+        if: steps.release.outputs.ready == 'true'
+        run: |
+          bunx playwright install --with-deps chromium
+          node --input-type=module -e 'import { chromium } from "@playwright/test"; console.log(`CHROME_PATH=${chromium.executablePath()}`)' >> "$GITHUB_ENV"
+      - name: Measure the live homepage
+        if: steps.release.outputs.ready == 'true'
+        run: node scripts/audit-live.mjs
+        env:
+          AUDIT_COMMIT: ${{ steps.release.outputs.commit }}
+          AUDIT_DEPLOYMENT_ID: ${{ steps.release.outputs.deployment }}
+      - uses: actions/upload-pages-artifact@v5
+        if: steps.release.outputs.ready == 'true'
+        with:
+          path: lighthouse-report/published
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: incomplete-lighthouse-reports
+          path: lighthouse-report/published
+          retention-days: 7
+          if-no-files-found: ignore
+
+  publish:
+    needs: audit
+    if: needs.audit.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v8
+        with:
+          name: github-pages
+          path: lighthouse-report/artifact
+      - name: Verify the release before publishing
+        run: |
+          mkdir -p lighthouse-report/published
+          tar -xf lighthouse-report/artifact/artifact.tar -C lighthouse-report/published
+          node scripts/audit-verify-release.mjs
+      - uses: actions/deploy-pages@v5
+        id: deployment
