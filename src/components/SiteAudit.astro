@@ -31,7 +31,34 @@ import {
             <th scope="row">{label}</th>
             {auditProfiles.map((profile) => (
               <td data-audit-score={`${profile}:${key}`}>
-                <span aria-label="Not yet loaded">—</span>
+                <span class="site-audit__gauge">
+                  <svg
+                    class="site-audit__ring"
+                    viewBox="0 0 64 64"
+                    width="64"
+                    height="64"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <circle class="site-audit__track" cx="32" cy="32" r="27" />
+                    <circle
+                      class="site-audit__progress"
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      pathLength="100"
+                      stroke-dashoffset="100"
+                      data-audit-progress
+                    />
+                  </svg>
+                  <span
+                    class="site-audit__value"
+                    data-audit-value
+                    aria-label="Not yet loaded"
+                  >
+                    —
+                  </span>
+                </span>
               </td>
             ))}
           </tr>
@@ -122,8 +149,44 @@ import {
   .site-audit__scores td {
     color: var(--muted);
     font-family: var(--font-mono);
-    font-size: 1.35rem;
+    font-size: 1.1rem;
     font-variant-numeric: tabular-nums;
+  }
+
+  .site-audit__gauge {
+    position: relative;
+    display: inline-grid;
+    width: 64px;
+    height: 64px;
+    place-items: center;
+    vertical-align: middle;
+  }
+
+  .site-audit__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    stroke-width: 3.5;
+  }
+
+  .site-audit__track {
+    fill: currentColor;
+    fill-opacity: 0.05;
+    stroke-opacity: 0.18;
+  }
+
+  .site-audit__progress {
+    fill: none;
+    stroke-dasharray: 100;
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  .site-audit__value {
+    position: relative;
+    line-height: 1;
   }
 
   .site-audit__scores td[data-rating='good'] {
@@ -163,7 +226,18 @@ import {
 
   @media (max-width: 400px) {
     .site-audit__scores td {
-      font-size: 1.15rem;
+      font-size: 1rem;
+    }
+
+    .site-audit__gauge {
+      width: 52px;
+      height: 52px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .site-audit__progress {
+      transition: stroke-dashoffset 500ms ease;
     }
   }
 </style>

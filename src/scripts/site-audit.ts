@@ -29,8 +29,13 @@ async function loadAudit(section: HTMLElement) {
           `[data-audit-score="${profile}:${key}"]`,
         );
         if (!cell) continue;
+        const value = cell.querySelector('[data-audit-value]');
+        const progress = cell.querySelector('[data-audit-progress]');
+        if (!value || !progress) continue;
         const score = audit.scores[profile][key];
-        cell.textContent = String(score);
+        value.textContent = String(score);
+        value.removeAttribute('aria-label');
+        progress.setAttribute('stroke-dashoffset', String(100 - score));
         cell.dataset['rating'] =
           score >= 90 ? 'good' : score >= 50 ? 'moderate' : 'poor';
       }
